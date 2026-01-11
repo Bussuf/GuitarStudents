@@ -24,18 +24,20 @@ export default function LessonCalendar({ lessons, onLessonClick, onAddLesson }) 
     setCurrentDate(moment());
   };
 
-  // Get days for current view
+  // Get days for current view (excluding Friday and Saturday)
   const getDays = () => {
     if (view === 'week') {
       const start = currentDate.clone().startOf('week');
-      return Array.from({ length: 7 }, (_, i) => start.clone().add(i, 'days'));
+      return Array.from({ length: 5 }, (_, i) => start.clone().add(i, 'days'));
     } else {
       const start = currentDate.clone().startOf('month').startOf('week');
       const end = currentDate.clone().endOf('month').endOf('week');
       const days = [];
       let day = start.clone();
       while (day.isSameOrBefore(end)) {
-        days.push(day.clone());
+        if (day.day() !== 5 && day.day() !== 6) { // Skip Friday (5) and Saturday (6)
+          days.push(day.clone());
+        }
         day.add(1, 'day');
       }
       return days;
@@ -55,7 +57,7 @@ export default function LessonCalendar({ lessons, onLessonClick, onAddLesson }) 
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <h2 className="text-xl font-bold">{currentDate.format('MMMM YYYY')}</h2>
           <div className="flex gap-1">
@@ -74,24 +76,24 @@ export default function LessonCalendar({ lessons, onLessonClick, onAddLesson }) 
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <NeonButton variant="ghost" size="sm" onClick={goToToday}>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <NeonButton variant="ghost" size="sm" onClick={goToPrev} className="flex-1 sm:flex-none">
+            <ChevronRight size={20} />
+          </NeonButton>
+          <NeonButton variant="ghost" size="sm" onClick={goToToday} className="flex-1 sm:flex-none">
             היום
           </NeonButton>
-          <button onClick={goToPrev} className="p-2 hover:bg-[#334155] rounded-lg transition-colors">
-            <ChevronRight size={20} />
-          </button>
-          <button onClick={goToNext} className="p-2 hover:bg-[#334155] rounded-lg transition-colors">
+          <NeonButton variant="ghost" size="sm" onClick={goToNext} className="flex-1 sm:flex-none">
             <ChevronLeft size={20} />
-          </button>
+          </NeonButton>
         </div>
       </div>
 
       {/* Calendar Grid */}
       <div className="bg-[#1E293B] rounded-2xl border border-[#334155] overflow-hidden">
         {/* Day Headers */}
-        <div className="grid grid-cols-7 border-b border-[#334155]">
-          {['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'].map((day, idx) => (
+        <div className={`grid ${view === 'week' ? 'grid-cols-5' : 'grid-cols-5'} border-b border-[#334155]`}>
+          {['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי'].map((day, idx) => (
             <div key={idx} className="p-3 text-center text-sm text-slate-400 font-medium">
               {day}
             </div>
@@ -99,7 +101,7 @@ export default function LessonCalendar({ lessons, onLessonClick, onAddLesson }) 
         </div>
 
         {/* Days Grid */}
-        <div className={`grid grid-cols-7 ${view === 'week' ? 'min-h-[400px]' : ''}`}>
+        <div className={`grid ${view === 'week' ? 'grid-cols-5 min-h-[400px]' : 'grid-cols-5'}`}>
           {days.map((day, idx) => {
             const dayLessons = getLessonsForDay(day);
             return (

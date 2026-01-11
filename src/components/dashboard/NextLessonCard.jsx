@@ -50,11 +50,22 @@ export default function NextLessonCard({ lesson, student, settings }) {
               <User className="w-6 h-6 text-white" />
             )}
           </div>
-          <div>
+          <div className="flex-1">
             <p className="font-bold text-lg">{student.name}</p>
-            <p className="text-[#00F0FF] text-sm">
-              {moment(lesson.date_time).format('dddd, D/M')} בשעה {moment(lesson.date_time).format('HH:mm')}
-            </p>
+            <div className="flex items-center gap-3 text-sm">
+              <p className="text-[#00F0FF]">
+                {moment(lesson.date_time).format('dddd, D/M')} • {moment(lesson.date_time).format('HH:mm')}
+              </p>
+              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                student.balance <= 1 
+                  ? 'bg-red-500/20 text-red-400' 
+                  : student.balance <= 3 
+                  ? 'bg-yellow-500/20 text-yellow-400'
+                  : 'bg-emerald-500/20 text-emerald-400'
+              }`}>
+                {student.balance} שיעורים
+              </span>
+            </div>
           </div>
         </div>
 
