@@ -3,6 +3,7 @@ import Settings from './pages/Settings';
 import Leads from './pages/Leads';
 import Students from './pages/Students';
 import Lessons from './pages/Lessons';
+import Finance from './pages/Finance';
 import __Layout from './Layout.jsx';
 
 
@@ -12,6 +13,7 @@ export const PAGES = {
     "Leads": Leads,
     "Students": Students,
     "Lessons": Lessons,
+    "Finance": Finance,
 }
 
 export const pagesConfig = {
