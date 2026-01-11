@@ -5,12 +5,6 @@ import { motion } from 'framer-motion';
 import { Sparkles, Calendar, Users, TrendingUp, AlertCircle } from 'lucide-react';
 import moment from 'moment';
 import 'moment/locale/he';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
 import NextLessonCard from '../components/dashboard/NextLessonCard';
 import TodaySchedule from '../components/dashboard/TodaySchedule';
@@ -92,74 +86,56 @@ export default function Dashboard() {
         </motion.div>
       )}
 
-      {/* Main Content with Accordion */}
-      <CyberCard>
-        <Accordion type="multiple" defaultValue={["next-lesson", "today", "balance", "stats"]}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <AccordionItem value="next-lesson">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-[#00F0FF]" />
-                  <h2 className="text-xl font-bold">השיעור הבא</h2>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6">
-                <NextLessonCard 
-                  lesson={nextLesson} 
-                  student={nextLessonStudent}
-                  settings={settings}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </motion.div>
+      {/* Main Content */}
+      <div className="space-y-6">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+          <CyberCard className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Calendar className="w-5 h-5 text-[#00F0FF]" />
+              <h2 className="text-xl font-bold">השיעור הבא</h2>
+            </div>
+            <NextLessonCard 
+              lesson={nextLesson} 
+              student={nextLessonStudent}
+              settings={settings}
+            />
+          </CyberCard>
+        </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <AccordionItem value="today">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                <div className="flex items-center gap-3">
-                  <Calendar className="w-5 h-5 text-[#00F0FF]" />
-                  <h2 className="text-xl font-bold">לוח זמנים היום</h2>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6">
-                <TodaySchedule lessons={todayLessons} students={students} />
-              </AccordionContent>
-            </AccordionItem>
-          </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <CyberCard className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Calendar className="w-5 h-5 text-[#00F0FF]" />
+              <h2 className="text-xl font-bold">לוח זמנים היום</h2>
+            </div>
+            <TodaySchedule lessons={todayLessons} students={students} />
+          </CyberCard>
+        </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <AccordionItem value="balance">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                <div className="flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 text-[#00F0FF]" />
-                  <h2 className="text-xl font-bold">תלמידים לחידוש</h2>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6">
-                <LowBalanceCard students={students} />
-              </AccordionContent>
-            </AccordionItem>
-          </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <CyberCard className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <AlertCircle className="w-5 h-5 text-[#00F0FF]" />
+              <h2 className="text-xl font-bold">תלמידים לחידוש</h2>
+            </div>
+            <LowBalanceCard students={students} />
+          </CyberCard>
+        </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-            <AccordionItem value="stats">
-              <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                <div className="flex items-center gap-3">
-                  <TrendingUp className="w-5 h-5 text-[#00F0FF]" />
-                  <h2 className="text-xl font-bold">סטטיסטיקות החודש</h2>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6">
-                <MonthlyStats 
-                  finances={finances} 
-                  lessons={lessons} 
-                  students={students}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </motion.div>
-        </Accordion>
-      </CyberCard>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+          <CyberCard className="p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <TrendingUp className="w-5 h-5 text-[#00F0FF]" />
+              <h2 className="text-xl font-bold">סטטיסטיקות החודש</h2>
+            </div>
+            <MonthlyStats 
+              finances={finances} 
+              lessons={lessons} 
+              students={students}
+            />
+          </CyberCard>
+        </motion.div>
+      </div>
     </div>
   );
 }
