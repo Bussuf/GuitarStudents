@@ -27,8 +27,13 @@ export default function NextLessonCard({ lesson, student, settings }) {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
+    <div>
+      <div className="flex items-center gap-3 mb-6">
+        <Clock className="w-5 h-5 text-[#00F0FF]" />
+        <h2 className="text-xl font-bold">השיעור הבא</h2>
+      </div>
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] flex items-center justify-center">
           {student.photo_url ? (
             <img src={student.photo_url} alt={student.name} className="w-full h-full rounded-full object-cover" />
@@ -70,6 +75,7 @@ export default function NextLessonCard({ lesson, student, settings }) {
           <MessageCircle size={18} />
           וואטסאפ
         </NeonButton>
+      </div>
       </div>
     </div>
   );

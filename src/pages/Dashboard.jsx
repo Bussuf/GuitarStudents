@@ -90,10 +90,6 @@ export default function Dashboard() {
       <div className="space-y-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <CyberCard className="p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <Calendar className="w-5 h-5 text-[#00F0FF]" />
-              <h2 className="text-xl font-bold">השיעור הבא</h2>
-            </div>
             <NextLessonCard 
               lesson={nextLesson} 
               student={nextLessonStudent}
@@ -104,30 +100,18 @@ export default function Dashboard() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <CyberCard className="p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <Calendar className="w-5 h-5 text-[#00F0FF]" />
-              <h2 className="text-xl font-bold">לוח זמנים היום</h2>
-            </div>
             <TodaySchedule lessons={todayLessons} students={students} />
           </CyberCard>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <CyberCard className="p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <AlertCircle className="w-5 h-5 text-[#00F0FF]" />
-              <h2 className="text-xl font-bold">תלמידים לחידוש</h2>
-            </div>
             <LowBalanceCard students={students} />
           </CyberCard>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           <CyberCard className="p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <TrendingUp className="w-5 h-5 text-[#00F0FF]" />
-              <h2 className="text-xl font-bold">סטטיסטיקות החודש</h2>
-            </div>
             <MonthlyStats 
               finances={finances} 
               lessons={lessons} 
