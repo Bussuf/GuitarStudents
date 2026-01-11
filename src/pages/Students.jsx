@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Plus, LayoutGrid, Table2, Phone, MessageCircle, AlertTriangle } from 'lucide-react';
+import moment from 'moment';
 
 import FullScreenModal from '../components/ui/FullScreenModal';
 import NeonButton from '../components/ui/NeonButton';
@@ -17,17 +18,23 @@ export default function Students() {
   const [editingStudent, setEditingStudent] = useState(null);
   const [showArchived, setShowArchived] = useState(false);
 
-  const { data: students = [], isLoading } = useQuery({
+  const { data: allStudents = [], isLoading } = useQuery({
     queryKey: ['students'],
     queryFn: () => base44.entities.Student.list('-created_date')
   });
 
-  const { data: settingsData = [] } = useQuery({
-    queryKey: ['settings'],
-    queryFn: () => base44.entities.Settings.list()
+  const { data: lessons = [] } = useQuery({
+    queryKey: ['lessons'],
+    queryFn: () => base44.entities.Lesson.list()
   });
 
-  const settings = settingsData[0] || {};
+  const students = allStudents.filter(s => showArchived ? s.is_active === false : s.is_active !== false);
+
+  const getUpcomingLessons = (studentId) => {
+    return lessons
+      .filter(l => l.student_id === studentId && moment(l.date_time).isAfter(moment()))
+      .sort((a, b) => moment(a.date_time).diff(moment(b.date_time)));
+  };
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Student.create(data),
@@ -72,16 +79,21 @@ export default function Students() {
     window.open(`https://wa.me/972${contactPhone?.replace(/^0/, '')}?text=${message}`, '_blank');
   };
 
+  const handleCall = (student) => {
+    const contactPhone = student.contact_parent ? student.parent_phone : student.phone;
+    window.open(`tel:${contactPhone}`, '_self');
+  };
+
   const columns = [
     { key: 'name', label: 'שם תלמיד', sortable: true },
     { 
       key: 'phone', 
       label: 'טלפון',
-      render: (phone) => (
+      render: (phone) => phone ? (
         <a href={`tel:${phone}`} className="text-[#00F0FF] hover:underline">
           {phone}
         </a>
-      )
+      ) : '-'
     },
     { key: 'age', label: 'גיל' },
     { 
@@ -93,6 +105,11 @@ export default function Students() {
           {balance}
         </span>
       )
+    },
+    {
+      key: 'weekly_lessons',
+      label: 'שיעורים/שבוע',
+      render: (val) => val || 1
     },
     {
       key: 'contact_parent',
@@ -108,8 +125,7 @@ export default function Students() {
       <button
         onClick={(e) => { 
           e.stopPropagation(); 
-          const phone = student.contact_parent ? student.parent_phone : student.phone;
-          window.open(`tel:${phone}`, '_self'); 
+          handleCall(student);
         }}
         className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-blue-400"
       >
@@ -120,6 +136,16 @@ export default function Students() {
         className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-[#25D366]"
       >
         <MessageCircle size={16} />
+      </button>
+      <button
+        onClick={(e) => { e.stopPropagation(); toggleArchive(student); }}
+        className={`px-2 py-1 rounded-lg text-xs transition-colors ${
+          student.is_active === false 
+            ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30' 
+            : 'bg-slate-600/20 text-slate-400 hover:bg-slate-600/30'
+        }`}
+      >
+        {student.is_active === false ? 'שחזר' : 'ארכב'}
       </button>
     </div>
   );
@@ -142,7 +168,7 @@ export default function Students() {
       >
         <div>
           <h1 className="text-3xl font-bold">תלמידים</h1>
-          <p className="text-slate-400 mt-1">{students.length} תלמידים במערכת</p>
+          <p className="text-slate-400 mt-1">{students.length} תלמידים {showArchived ? 'בארכיון' : 'פעילים'}</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -196,8 +222,11 @@ export default function Students() {
                 key={student.id}
                 student={student}
                 index={idx}
-                onClick={() => handleEdit(student)}
+                onEdit={handleEdit}
+                onCall={handleCall}
                 onWhatsApp={handleWhatsApp}
+                upcomingLessons={getUpcomingLessons(student.id)}
+                onToggleArchive={toggleArchive}
               />
             ))}
           </div>
