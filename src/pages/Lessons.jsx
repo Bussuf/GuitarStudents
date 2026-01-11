@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Calendar, Table2, RefreshCw } from 'lucide-react';
+import { Plus, Calendar, Table2, RefreshCw, Edit2, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import 'moment/locale/he';
 
@@ -133,6 +133,13 @@ export default function Lessons() {
     }
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Lesson.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['lessons'] });
+    }
+  });
+
   const handleSave = (data) => {
     if (editingLesson) {
       updateMutation.mutate({ 
@@ -154,6 +161,12 @@ export default function Lessons() {
     setSelectedDate(date);
     setEditingLesson(null);
     setModalOpen(true);
+  };
+
+  const handleDelete = (lesson) => {
+    if (window.confirm(`למחוק את השיעור של ${lesson.student_name}?`)) {
+      deleteMutation.mutate(lesson.id);
+    }
   };
 
   const columns = [
@@ -182,6 +195,17 @@ export default function Lessons() {
       )
     }
   ];
+
+  const tableActions = (lesson) => (
+    <div className="flex gap-2">
+      <NeonButton size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleEdit(lesson); }}>
+        <Edit2 size={16} />
+      </NeonButton>
+      <NeonButton size="sm" variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(lesson); }}>
+        <Trash2 size={16} />
+      </NeonButton>
+    </div>
+  );
 
   if (isLoading) {
     return (
@@ -253,6 +277,7 @@ export default function Lessons() {
             columns={columns}
             data={lessons}
             onRowClick={handleEdit}
+            actions={tableActions}
             emptyMessage="אין שיעורים עדיין"
           />
         )}

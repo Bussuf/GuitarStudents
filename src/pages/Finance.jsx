@@ -76,6 +76,25 @@ export default function Finance() {
     }
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async (id) => {
+      const finance = finances.find(f => f.id === id);
+      if (finance) {
+        const student = students.find(s => s.id === finance.student_id);
+        if (student) {
+          await base44.entities.Student.update(student.id, {
+            balance: Math.max(0, (student.balance || 0) - (finance.lessons_count || 0))
+          });
+          queryClient.invalidateQueries({ queryKey: ['students'] });
+        }
+      }
+      await base44.entities.Finance.delete(id);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['finances'] });
+    }
+  });
+
   const handleSave = (data) => {
     if (editingFinance) {
       updateMutation.mutate({ id: editingFinance.id, data });
@@ -88,6 +107,23 @@ export default function Finance() {
     setEditingFinance(finance);
     setModalOpen(true);
   };
+
+  const handleDelete = (finance) => {
+    if (window.confirm(`למחוק את התשלום של ${finance.student_name}?`)) {
+      deleteMutation.mutate(finance.id);
+    }
+  };
+
+  const tableActions = (finance) => (
+    <div className="flex gap-2">
+      <NeonButton size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleEdit(finance); }}>
+        <Edit2 size={16} />
+      </NeonButton>
+      <NeonButton size="sm" variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(finance); }}>
+        <Trash2 size={16} />
+      </NeonButton>
+    </div>
+  );
 
   // Calculate stats
   const currentMonth = moment().startOf('month');
