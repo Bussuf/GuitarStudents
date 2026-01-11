@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Calendar, Table2 } from 'lucide-react';
+import { Plus, Calendar, Table2, RefreshCw } from 'lucide-react';
 import moment from 'moment';
 import 'moment/locale/he';
 
@@ -38,6 +38,65 @@ export default function Lessons() {
       queryClient.invalidateQueries({ queryKey: ['lessons'] });
       setModalOpen(false);
       setSelectedDate(null);
+    }
+  });
+
+  const refreshLessonsMutation = useMutation({
+    mutationFn: async () => {
+      const activeStudents = students.filter(s => 
+        s.is_active && 
+        s.balance > 0 && 
+        s.recurring_schedule && 
+        s.recurring_schedule.length > 0
+      );
+
+      const newLessons = [];
+      const weeksAhead = 4;
+      const today = moment().startOf('day');
+
+      for (const student of activeStudents) {
+        let lessonsCreated = 0;
+        const maxLessons = student.balance;
+
+        for (let week = 0; week < weeksAhead; week++) {
+          if (lessonsCreated >= maxLessons) break;
+
+          for (const slot of student.recurring_schedule) {
+            if (lessonsCreated >= maxLessons) break;
+
+            const targetDate = today.clone().add(week, 'weeks').day(slot.day);
+            const [hours, minutes] = slot.time.split(':');
+            targetDate.hours(parseInt(hours)).minutes(parseInt(minutes)).seconds(0);
+
+            if (targetDate.isAfter(moment())) {
+              const exists = lessons.some(l => 
+                l.student_id === student.id && 
+                moment(l.date_time).isSame(targetDate, 'minute')
+              );
+
+              if (!exists) {
+                newLessons.push({
+                  student_id: student.id,
+                  student_name: student.name,
+                  date_time: targetDate.toISOString(),
+                  status: 'עתידי'
+                });
+                lessonsCreated++;
+              }
+            }
+          }
+        }
+      }
+
+      if (newLessons.length > 0) {
+        await base44.entities.Lesson.bulkCreate(newLessons);
+      }
+
+      return newLessons.length;
+    },
+    onSuccess: (count) => {
+      queryClient.invalidateQueries({ queryKey: ['lessons'] });
+      alert(`נוצרו ${count} שיעורים חדשים`);
     }
   });
 
@@ -160,6 +219,15 @@ export default function Lessons() {
               <Table2 size={20} />
             </button>
           </div>
+
+          <NeonButton 
+            onClick={() => refreshLessonsMutation.mutate()} 
+            variant="secondary"
+            disabled={refreshLessonsMutation.isPending}
+          >
+            <RefreshCw size={20} className={refreshLessonsMutation.isPending ? 'animate-spin' : ''} />
+            רענן שיעורים
+          </NeonButton>
 
           <NeonButton onClick={() => { setEditingLesson(null); setSelectedDate(null); setModalOpen(true); }}>
             <Plus size={20} />
