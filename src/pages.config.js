@@ -4,6 +4,7 @@ import Leads from './pages/Leads';
 import Students from './pages/Students';
 import Lessons from './pages/Lessons';
 import Finance from './pages/Finance';
+import Resources from './pages/Resources';
 import __Layout from './Layout.jsx';
 
 
@@ -14,6 +15,7 @@ export const PAGES = {
     "Students": Students,
     "Lessons": Lessons,
     "Finance": Finance,
+    "Resources": Resources,
 }
 
 export const pagesConfig = {
