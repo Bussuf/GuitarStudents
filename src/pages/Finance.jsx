@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, Wallet, TrendingUp, CreditCard, Banknote } from 'lucide-react';
+import { Plus, Wallet, TrendingUp, CreditCard, Banknote, Edit2, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import 'moment/locale/he';
 
@@ -288,6 +288,7 @@ export default function Finance() {
               columns={columns}
               data={group.items}
               onRowClick={handleEdit}
+              actions={tableActions}
               emptyMessage="אין רשומות"
             />
           </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, BookOpen, FileText, Video, Music, Link as LinkIcon, Image, ExternalLink, Trash2 } from 'lucide-react';
+import { Plus, BookOpen, FileText, Video, Music, Link as LinkIcon, Image, ExternalLink, Trash2, Edit2 } from 'lucide-react';
 
 import FullScreenModal from '../components/ui/FullScreenModal';
 import NeonButton from '../components/ui/NeonButton';
@@ -201,6 +201,12 @@ export default function Resources() {
                               <ExternalLink size={16} />
                             </a>
                           )}
+                          <button
+                            onClick={(e) => { e.stopPropagation(); handleEdit(resource); }}
+                            className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-slate-400 hover:text-white"
+                          >
+                            <Edit2 size={16} />
+                          </button>
                           <button
                             onClick={(e) => handleDelete(e, resource)}
                             className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-red-400"
