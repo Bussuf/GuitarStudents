@@ -10,6 +10,7 @@ export default function StudentForm({ student, onSave, onCancel }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
+    city: '',
     age: '',
     balance: 0,
     is_active: true,
@@ -28,6 +29,7 @@ export default function StudentForm({ student, onSave, onCancel }) {
       setFormData({
         name: student.name || '',
         phone: student.phone || '',
+        city: student.city || '',
         age: student.age || '',
         balance: student.balance || 0,
         is_active: student.is_active !== undefined ? student.is_active : true,
@@ -150,12 +152,23 @@ export default function StudentForm({ student, onSave, onCancel }) {
           placeholder="לא חובה אם יש טלפון הורה"
         />
         <FormInput
+          label="יישוב מגורים"
+          name="city"
+          value={formData.city}
+          onChange={handleChange}
+          placeholder="תל אביב, ירושלים..."
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormInput
           label="גיל"
           name="age"
           type="number"
           value={formData.age}
           onChange={handleChange}
         />
+        <div></div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

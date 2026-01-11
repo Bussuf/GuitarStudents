@@ -38,6 +38,9 @@ export default function StudentCard({ student, onEdit, onCall, onWhatsApp, upcom
               )}
             </div>
             <p className="text-slate-400 text-sm">{student.phone || 'אין טלפון'}</p>
+            {student.city && (
+              <p className="text-slate-500 text-xs">📍 {student.city}</p>
+            )}
           </div>
         </div>
 
