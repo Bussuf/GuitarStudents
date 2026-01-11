@@ -93,10 +93,10 @@ export default function Dashboard() {
       )}
 
       {/* Main Content with Accordion */}
-      <Accordion type="multiple" defaultValue={["next-lesson", "today", "balance", "stats"]} className="space-y-4">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <AccordionItem value="next-lesson" className="border-0">
-            <CyberCard>
+      <CyberCard>
+        <Accordion type="multiple" defaultValue={["next-lesson", "today", "balance", "stats"]}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
+            <AccordionItem value="next-lesson">
               <AccordionTrigger className="px-6 py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-[#00F0FF]" />
@@ -110,13 +110,11 @@ export default function Dashboard() {
                   settings={settings}
                 />
               </AccordionContent>
-            </CyberCard>
-          </AccordionItem>
-        </motion.div>
+            </AccordionItem>
+          </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <AccordionItem value="today" className="border-0">
-            <CyberCard>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <AccordionItem value="today">
               <AccordionTrigger className="px-6 py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <Calendar className="w-5 h-5 text-[#00F0FF]" />
@@ -126,13 +124,11 @@ export default function Dashboard() {
               <AccordionContent className="px-6 pb-6">
                 <TodaySchedule lessons={todayLessons} students={students} />
               </AccordionContent>
-            </CyberCard>
-          </AccordionItem>
-        </motion.div>
+            </AccordionItem>
+          </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <AccordionItem value="balance" className="border-0">
-            <CyberCard>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+            <AccordionItem value="balance">
               <AccordionTrigger className="px-6 py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <AlertCircle className="w-5 h-5 text-[#00F0FF]" />
@@ -142,13 +138,11 @@ export default function Dashboard() {
               <AccordionContent className="px-6 pb-6">
                 <LowBalanceCard students={students} />
               </AccordionContent>
-            </CyberCard>
-          </AccordionItem>
-        </motion.div>
+            </AccordionItem>
+          </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-          <AccordionItem value="stats" className="border-0">
-            <CyberCard>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+            <AccordionItem value="stats">
               <AccordionTrigger className="px-6 py-4 hover:no-underline">
                 <div className="flex items-center gap-3">
                   <TrendingUp className="w-5 h-5 text-[#00F0FF]" />
@@ -162,10 +156,10 @@ export default function Dashboard() {
                   students={students}
                 />
               </AccordionContent>
-            </CyberCard>
-          </AccordionItem>
-        </motion.div>
-      </Accordion>
+            </AccordionItem>
+          </motion.div>
+        </Accordion>
+      </CyberCard>
     </div>
   );
 }
