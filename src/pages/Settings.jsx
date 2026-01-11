@@ -52,6 +52,41 @@ export default function Settings() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleTemplateChange = (index, field, value) => {
+    const updated = [...formData.whatsapp_templates];
+    updated[index][field] = value;
+    setFormData(prev => ({ ...prev, whatsapp_templates: updated }));
+  };
+
+  const addTemplate = () => {
+    setFormData(prev => ({
+      ...prev,
+      whatsapp_templates: [...prev.whatsapp_templates, { name: '', message: '', attach_price_image: false }]
+    }));
+  };
+
+  const removeTemplate = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      whatsapp_templates: prev.whatsapp_templates.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setUploadingImage(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setFormData(prev => ({ ...prev, price_image_url: file_url }));
+    } catch (error) {
+      alert('שגיאה בהעלאת התמונה');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     saveMutation.mutate({
