@@ -141,9 +141,41 @@ export default function Settings() {
               <MessageCircle className="w-5 h-5 text-[#25D366]" />
               <h2 className="text-xl font-bold">תבניות וואטסאפ</h2>
             </div>
-            <p className="text-sm text-slate-400 mb-4">
-              השתמש ב-{'{name}'} כדי להכניס את שם התלמיד/ליד אוטומטית
-            </p>
+            
+            <div className="bg-[#0F172A] border border-[#334155] rounded-xl p-4 mb-4">
+              <h3 className="text-sm font-bold text-[#00F0FF] mb-3">משתנים זמינים:</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-300">
+                <div className="flex items-center gap-2">
+                  <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{name}'}</code>
+                  <span>שם התלמיד/ליד</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{date}'}</code>
+                  <span>תאריך השיעור</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{time}'}</code>
+                  <span>שעת השיעור</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{lesson_number}'}</code>
+                  <span>מספר שיעור נוכחי</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{total_lessons}'}</code>
+                  <span>סה"כ שיעורים בחבילה</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{balance}'}</code>
+                  <span>יתרת שיעורים</span>
+                </div>
+              </div>
+              <div className="mt-3 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
+                <p className="text-xs text-emerald-400">
+                  <strong>דוגמה:</strong> היי {'{name}'}, היום ב{'{time}'} שיעור גיטרה (מספר {'{lesson_number}'}/{'{total_lessons}'})
+                </p>
+              </div>
+            </div>
             <div className="space-y-4">
               <FormInput
                 label="הודעת פתיחה לליד חדש"
