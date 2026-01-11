@@ -102,7 +102,7 @@ export default function Dashboard() {
       )}
 
       {/* Main Content */}
-      <Accordion type="multiple" value={accordionState} onValueChange={setAccordionState} className="space-y-6">
+      <Accordion type="multiple" value={accordionState} onValueChange={setAccordionState} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <AccordionItem value="next-lesson" className="border-0">
             <CyberCard>
