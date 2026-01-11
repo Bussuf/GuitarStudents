@@ -124,6 +124,25 @@ export default function Dashboard() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+          <AccordionItem value="low-balance" className="border-0">
+            <CyberCard>
+              <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                <div className="flex items-center gap-3 w-full">
+                  <AlertCircle className="w-5 h-5 text-[#00F0FF]" />
+                  <h2 className="text-xl font-bold">כרטיסיות לחידוש</h2>
+                  <span className="mr-auto bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full text-sm">
+                    {students.filter(s => s.balance <= 1).length}
+                  </span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-6 pb-6">
+                <LowBalanceCard students={students} />
+              </AccordionContent>
+            </CyberCard>
+          </AccordionItem>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <AccordionItem value="today-schedule" className="border-0">
             <CyberCard>
               <AccordionTrigger className="px-6 py-4 hover:no-underline">
@@ -135,25 +154,6 @@ export default function Dashboard() {
               </AccordionTrigger>
               <AccordionContent className="px-6 pb-6">
                 <TodaySchedule lessons={todayLessons} students={students} />
-              </AccordionContent>
-            </CyberCard>
-          </AccordionItem>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <AccordionItem value="low-balance" className="border-0">
-            <CyberCard>
-              <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                <div className="flex items-center gap-3 w-full">
-                  <AlertCircle className="w-5 h-5 text-[#00F0FF]" />
-                  <h2 className="text-xl font-bold">תלמידים לחידוש</h2>
-                  <span className="mr-auto bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full text-sm">
-                    {students.filter(s => s.balance <= 1).length}
-                  </span>
-                </div>
-              </AccordionTrigger>
-              <AccordionContent className="px-6 pb-6">
-                <LowBalanceCard students={students} />
               </AccordionContent>
             </CyberCard>
           </AccordionItem>
