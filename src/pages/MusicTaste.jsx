@@ -45,27 +45,190 @@ const allArtistTrios = [
 ];
 
 const songRecommendations = {
-  'רוק ישראלי קלאסי': ['אבא - אריק איינשטיין', 'סוף העולם - שלמה ארצי', 'רכבת הלילה לקהיר - יהודה פוליקר'],
-  'רוק ישראלי': ['רוקדים עם עצמנו - ברי סחרוף', 'להיות או לא להיות - יהודה פוליקר', 'שיר לשלום - מתי כספי'],
-  'פופ ישראלי': ['מיליון דולר - סטטיק ובן אל', 'גן עדן - עומר אדם', 'על איזה קו - נועה קירל'],
-  'מזרחית': ['ניסים - אייל גולן', 'מזל טוב - משה פרץ', 'שלא תלכי - אברהם טל'],
-  'רוק קלאסי': ['Stairway to Heaven - Led Zeppelin', 'Hotel California - Eagles', 'Bohemian Rhapsody - Queen'],
-  'הארד רוק': ['Smoke on the Water - Deep Purple', 'Back in Black - AC/DC', 'Sweet Child O Mine - Guns N Roses'],
-  'רוק פרוגרסיבי': ['Comfortably Numb - Pink Floyd', 'Close to the Edge - Yes', '21st Century Schizoid Man - King Crimson'],
-  'מטאל': ['Master of Puppets - Metallica', 'Iron Man - Black Sabbath', 'Holy Diver - Dio'],
-  'תראש מטאל': ['Raining Blood - Slayer', 'Peace Sells - Megadeth', 'Angel of Death - Slayer'],
-  'גראנג\'': ['Smells Like Teen Spirit - Nirvana', 'Black - Pearl Jam', 'Man in the Box - Alice in Chains'],
-  'פולק': ['Blowin in the Wind - Bob Dylan', 'The Sound of Silence - Simon & Garfunkel', 'Big Yellow Taxi - Joni Mitchell'],
-  'פופ': ['Thriller - Michael Jackson', 'Like a Prayer - Madonna', 'Billie Jean - Michael Jackson'],
-  'R&B': ['Superstition - Stevie Wonder', 'Respect - Aretha Franklin', 'Lets Get It On - Marvin Gaye'],
-  'סול': ['A Change Is Gonna Come - Sam Cooke', 'Lets Stay Together - Al Green', 'I Say a Little Prayer - Aretha Franklin'],
-  'היפ הופ': ['Juicy - Notorious B.I.G', 'Nuthin but a G Thang - Dr. Dre', 'Lose Yourself - Eminem'],
-  'ראפ': ['California Love - 2Pac', 'In Da Club - 50 Cent', 'Humble - Kendrick Lamar'],
-  'ג\'אז': ['Take Five - Dave Brubeck', 'So What - Miles Davis', 'Round Midnight - Thelonious Monk'],
-  'קאנטרי': ['Ring of Fire - Johnny Cash', 'Jolene - Dolly Parton', 'Always on My Mind - Willie Nelson'],
-  'רגאיי': ['No Woman No Cry - Bob Marley', 'Redemption Song - Bob Marley', 'The Harder They Come - Jimmy Cliff'],
-  'אלקטרוניקה': ['One More Time - Daft Punk', 'Windowlicker - Aphex Twin', 'Firestarter - The Prodigy'],
-  'אינדי רוק': ['Mr. Brightside - The Killers', 'Do I Wanna Know? - Arctic Monkeys', 'Last Nite - The Strokes'],
+  'רוק ישראלי קלאסי': [
+    'אבא - אריק איינשטיין (ריף פתיחה קלאסי)', 
+    'סוף העולם - שלמה ארצי (אקורדים פשוטים)',
+    'רכבת הלילה לקהיר - יהודה פוליקר (ריף אייקוני)',
+    'יושב על הגדר - אריק איינשטיין (אקורדים בסיסיים)',
+    'אני ואתה - אריק איינשטיין (שיר פופולרי)',
+    'חום יולי אוגוסט - שלמה ארצי (ריף מזוהה)'
+  ],
+  'רוק ישראלי': [
+    'רוקדים עם עצמנו - ברי סחרוף (ריף אייקוני)', 
+    'להיות או לא להיות - יהודה פוליקר (אקורדים פשוטים)',
+    'פצצה - ברי סחרוף (ריף פאואר)',
+    'קח לי הביתה - מוקי (מנגינה קלה)',
+    'הרכבת - בנימין חיים (ריף מזוהה)',
+    'סוף המסיבה - טיפקס (אקורדים בסיסיים)'
+  ],
+  'פופ ישראלי': [
+    'מיליון דולר - סטטיק ובן אל (אקורדים פופולריים)', 
+    'גן עדן - עומר אדם (ריף קליט)',
+    'על איזה קו - נועה קירל (מנגינה פשוטה)',
+    'בואי - סטטיק ובן אל (אקורדים קלים)',
+    'מה איתך - עדן חסון (ריף מזוהה)',
+    'לא מזמן - עדן בן זקן (מנגינה פופולרית)'
+  ],
+  'מזרחית': [
+    'ניסים - אייל גולן (ריף קליט)', 
+    'מזל טוב - משה פרץ (אקורדים פשוטים)',
+    'שלא תלכי - אברהם טל (מנגינה מזוהה)',
+    'כמו פרחים - משה פרץ (ריף אייקוני)',
+    'אמא אני רוצה - אייל גולן (אקורדים בסיסיים)',
+    'לא נותן לך לעזוב - דודו טסה (מנגינה פופולרית)'
+  ],
+  'רוק קלאסי': [
+    'Stairway to Heaven - Led Zeppelin (ריף אגדי)', 
+    'Hotel California - Eagles (סולו אייקוני)',
+    'Smoke on the Water - Deep Purple (ריף הכי מפורסם)',
+    'Come As You Are - Nirvana (ריף פשוט ומזוהה)',
+    'Wonderwall - Oasis (אקורדים קלים)',
+    'Knockin on Heavens Door - Bob Dylan (3 אקורדים)'
+  ],
+  'הארד רוק': [
+    'Smoke on the Water - Deep Purple (ריף נדבי הראשון)', 
+    'Back in Black - AC/DC (ריף אייקוני)',
+    'Sweet Child O Mine - Guns N Roses (ריף מזוהה)',
+    'Enter Sandman - Metallica (ריף קליט)',
+    'Paranoid - Black Sabbath (ריף מהיר)',
+    'You Shook Me All Night Long - AC/DC (ריף פשוט)'
+  ],
+  'רוק פרוגרסיבי': [
+    'Comfortably Numb - Pink Floyd (סולו אגדי)', 
+    'Another Brick in the Wall - Pink Floyd (ריף מזוהה)',
+    'Money - Pink Floyd (ריף בייס אייקוני)',
+    'Wish You Were Here - Pink Floyd (אקורדים פשוטים)',
+    'Kashmir - Led Zeppelin (ריף אפי)',
+    'Roundabout - Yes (ריף מזוהה)'
+  ],
+  'מטאל': [
+    'Master of Puppets - Metallica (ריף אגדי)', 
+    'Iron Man - Black Sabbath (ריף אייקוני)',
+    'Enter Sandman - Metallica (ריף קליט)',
+    'Crazy Train - Ozzy Osbourne (ריף מזוהה)',
+    'One - Metallica (אקורדים דרמטיים)',
+    'Breaking the Law - Judas Priest (ריף פשוט)'
+  ],
+  'תראש מטאל': [
+    'Raining Blood - Slayer (ריף אגרסיבי)', 
+    'Peace Sells - Megadeth (ריף בייס אייקוני)',
+    'Symphony of Destruction - Megadeth (ריף קליט)',
+    'Angel of Death - Slayer (ריף מהיר)',
+    'Holy Wars - Megadeth (ריף מורכב)',
+    'South of Heaven - Slayer (ריף כבד)'
+  ],
+  'גראנג\'': [
+    'Smells Like Teen Spirit - Nirvana (ריף אייקוני)', 
+    'Come As You Are - Nirvana (ריף פשוט ומזוהה)',
+    'Black - Pearl Jam (אקורדים רגשיים)',
+    'Man in the Box - Alice in Chains (ריף כבד)',
+    'Even Flow - Pearl Jam (ריף קליט)',
+    'Lithium - Nirvana (אקורדים פשוטים)'
+  ],
+  'פולק': [
+    'Blowin in the Wind - Bob Dylan (3 אקורדים)', 
+    'The Sound of Silence - Simon & Garfunkel (אקורדים פשוטים)',
+    'Knockin on Heavens Door - Bob Dylan (אקורדים בסיסיים)',
+    'House of the Rising Sun - The Animals (ארפג\'יו מזוהה)',
+    'Where Did You Sleep Last Night - Nirvana (פינגרסטייל פשוט)',
+    'Hallelujah - Leonard Cohen (אקורדים קלים)'
+  ],
+  'פופ': [
+    'Billie Jean - Michael Jackson (ריף בייס אייקוני)', 
+    'Beat It - Michael Jackson (סולו מפורסם)',
+    'Shape of You - Ed Sheeran (ריף פופולרי)',
+    'Thinking Out Loud - Ed Sheeran (אקורדים פשוטים)',
+    'Perfect - Ed Sheeran (בלדה קלה)',
+    'Someone Like You - Adele (פסנתר/גיטרה פשוט)'
+  ],
+  'R&B': [
+    'Superstition - Stevie Wonder (ריף פאנקי)', 
+    'Respect - Aretha Franklin (ריף קליט)',
+    'Lets Get It On - Marvin Gaye (אקורדים רומנטיים)',
+    'Aint No Sunshine - Bill Withers (אקורדים פשוטים)',
+    'Lean On Me - Bill Withers (3 אקורדים)',
+    'Stand By Me - Ben E. King (ריף בייס מזוהה)'
+  ],
+  'סול': [
+    'A Change Is Gonna Come - Sam Cooke (בלדה סול)', 
+    'Lets Stay Together - Al Green (ריף רומנטי)',
+    'Aint No Mountain High Enough - Marvin Gaye (ריף אופטימי)',
+    'My Girl - The Temptations (ריף קליט)',
+    'I Heard It Through the Grapevine - Marvin Gaye (ריף אייקוני)',
+    'What\'s Going On - Marvin Gaye (אקורדים פשוטים)'
+  ],
+  'היפ הופ': [
+    'Gin and Juice - Snoop Dogg (ריף פאנקי)', 
+    'Nuthin but a G Thang - Dr. Dre (ריף מזוהה)',
+    'Still D.R.E - Dr. Dre (ריף פסנתר אייקוני)',
+    'California Love - 2Pac (ריף קליט)',
+    'In Da Club - 50 Cent (בייס קליט)',
+    'Forgot About Dre - Dr. Dre (ריף מזוהה)'
+  ],
+  'ראפ': [
+    'Lose Yourself - Eminem (ריף גיטרה מוכר)', 
+    'Humble - Kendrick Lamar (בייס כבד)',
+    'Stan - Eminem (סמפל דידו)',
+    'DNA - Kendrick Lamar (בייס אגרסיבי)',
+    'The Real Slim Shady - Eminem (ריף קליט)',
+    'Swimming Pools - Kendrick Lamar (סינת\' מזוהה)'
+  ],
+  'ג\'אז': [
+    'Take Five - Dave Brubeck (ריתם 5/4 מפורסם)', 
+    'So What - Miles Davis (מודלי)',
+    'Autumn Leaves - פופולרי לג\'אם (סטנדרט)',
+    'Blue Bossa - קני דורהם (בוסה נובה)',
+    'Fly Me to the Moon - פרנק סינטרה (סטנדרט קל)',
+    'Summertime - ג\'ורג\' גרשווין (סטנדרט קלאסי)'
+  ],
+  'קאנטרי': [
+    'Ring of Fire - Johnny Cash (ריף אייקוני)', 
+    'Jolene - Dolly Parton (אקורדים פשוטים)',
+    'Wagon Wheel - Old Crow Medicine Show (אקורדים קלים)',
+    'Take Me Home, Country Roads - John Denver (שיר פופולרי)',
+    'Folsom Prison Blues - Johnny Cash (ריף מזוהה)',
+    'Hey Good Lookin - Hank Williams (קאנטרי קלאסי)'
+  ],
+  'רגאיי': [
+    'No Woman No Cry - Bob Marley (אקורדים פשוטים)', 
+    'Redemption Song - Bob Marley (בלדה אקוסטית)',
+    'Three Little Birds - Bob Marley (אקורדים בסיסיים)',
+    'Could You Be Loved - Bob Marley (ריתם רגאיי)',
+    'Buffalo Soldier - Bob Marley (ריף מזוהה)',
+    'One Love - Bob Marley (שיר פופולרי)'
+  ],
+  'אלקטרוניקה': [
+    'Get Lucky - Daft Punk (ריף פאנקי)', 
+    'One More Time - Daft Punk (ריתם דאנס)',
+    'Around the World - Daft Punk (בייסליין חוזר)',
+    'Firestarter - The Prodigy (ריף אגרסיבי)',
+    'Breathe - The Prodigy (בייס כבד)',
+    'Block Rockin Beats - Chemical Brothers (ברייק ביט)'
+  ],
+  'אינדי רוק': [
+    'Mr. Brightside - The Killers (ריף אייקוני)', 
+    'Do I Wanna Know? - Arctic Monkeys (ריף כבד)',
+    'Last Nite - The Strokes (ריף גראז\')',
+    'Reptilia - The Strokes (ריף מהיר)',
+    'Seven Nation Army - White Stripes (ריף נדבי)',
+    'Take Me Out - Franz Ferdinand (ריף קליט)'
+  ],
+  'אלט-פופ': [
+    'Bad Guy - Billie Eilish (בייסליין מינימלי)', 
+    'Everything I Wanted - Billie Eilish (מלודיה עדינה)',
+    'Lovely - Billie Eilish (בלדה פשוטה)',
+    'Royals - Lorde (ריתם מינימלי)',
+    'Green Light - Lorde (סינת\' פופ)',
+    'Summertime Sadness - Lana Del Rey (בלדה דרמטית)'
+  ],
+  'ניו ווייב': [
+    'Just Like Heaven - The Cure (ריף דרימי)', 
+    'Love Cats - The Cure (בייס קופץ)',
+    'Friday Im in Love - The Cure (אקורדים עליזים)',
+    'Enjoy the Silence - Depeche Mode (סינת\' פופ)',
+    'Personal Jesus - Depeche Mode (ריף מזוהה)',
+    'Blue Monday - New Order (בייסליין אייקוני)'
+  ],
 };
 
 export default function MusicTaste() {
@@ -77,6 +240,8 @@ export default function MusicTaste() {
   const [justReached15, setJustReached15] = useState(false);
   const [showButton, setShowButton] = useState(false);
   const [askedCombinations, setAskedCombinations] = useState([]);
+  const [aiReview, setAiReview] = useState('');
+  const [loadingReview, setLoadingReview] = useState(false);
 
   useEffect(() => {
     shuffleTrios();
@@ -203,8 +368,40 @@ export default function MusicTaste() {
     shuffleTrios();
   };
 
-  const handleViewResults = () => {
+  const handleViewResults = async () => {
     setShowResults(true);
+    setLoadingReview(true);
+    
+    try {
+      const topGenres = getTopGenres();
+      const topArtists = getMostSelectedArtists();
+      
+      const prompt = `אתה DJ מקצועי ומבקר מוזיקה מנוסה שעובד ברדיו מסחרי גדול כמו גלגלצ. 
+אתה מכיר כל שיר עדכני וחדש, כל האמנים המובילים, וכל הז'אנרים המוזיקליים.
+
+תלמיד שלנו עשה מבחן טעם מוזיקלי וענה על ${selections.length} שאלות.
+
+האמנים שהכי אהב:
+${topArtists.slice(0, 5).map((a, i) => `${i + 1}. ${a}`).join('\n')}
+
+הז'אנרים שהכי אהב:
+${topGenres.slice(0, 5).map((g, i) => `${i + 1}. ${g.genre} (${g.count} בחירות)`).join('\n')}
+
+כתוב תגובה מקצועית, אנרגטית ומרגשת (2-3 משפטים) בסגנון DJ רדיו שמסכם את הטעם המוזיקלי שלו.
+תהיה מדויק, ספציפי, ומעניין. תציין את הז'אנרים והאמנים שבחר.
+כתוב בעברית בלבד, בסגנון צעיר ואנרגטי.`;
+
+      const response = await base44.integrations.Core.InvokeLLM({ 
+        prompt,
+        add_context_from_internet: false 
+      });
+      
+      setAiReview(response);
+    } catch (error) {
+      setAiReview('אווו, זה טעם מוזיקלי מעולה! יש לך עין טובה למוזיקה איכותית 🎸🔥');
+    } finally {
+      setLoadingReview(false);
+    }
   };
 
   const handleContinue = () => {
@@ -258,14 +455,14 @@ export default function MusicTaste() {
     // Use artist-related genres first, then top genres
     const allGenres = [...new Set([...artistGenres, ...topGenres.map(g => g.genre)])];
     
-    allGenres.slice(0, 4).forEach((genre) => {
+    allGenres.forEach((genre) => {
       const songs = songRecommendations[genre];
       if (songs) {
         recommendations.push(...songs);
       }
     });
 
-    return [...new Set(recommendations)].slice(0, 6);
+    return [...new Set(recommendations)].slice(0, 24);
   };
 
   const hasEnoughData = selections.length >= 15;
@@ -327,66 +524,68 @@ export default function MusicTaste() {
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
           <CyberCard className="p-8">
-            <h2 className="text-2xl font-bold mb-6 neon-text">האמנים האהובים עליך:</h2>
-            <div className="space-y-3 mb-8">
-              {topArtists.slice(0, 5).map((artist, idx) => (
+            {loadingReview ? (
+              <div className="mb-6 p-6 bg-gradient-to-r from-[#00F0FF]/10 to-[#BD00FF]/10 rounded-xl border border-[#00F0FF]/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-6 h-6 border-4 border-[#00F0FF] border-t-transparent rounded-full animate-spin" />
+                  <p className="text-slate-300">המומחה שלנו מנתח את הטעם המוזיקלי שלך...</p>
+                </div>
+              </div>
+            ) : aiReview && (
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-6 bg-gradient-to-r from-[#00F0FF]/10 to-[#BD00FF]/10 rounded-xl border border-[#00F0FF]/30"
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <Music className="w-6 h-6 text-[#00F0FF] mt-1" />
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-[#00F0FF] mb-2">🎙️ המומחה שלנו אומר:</h3>
+                    <p className="text-slate-200 text-lg leading-relaxed">{aiReview}</p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
+            <h2 className="text-2xl font-bold mb-4 neon-text">הז'אנרים האהובים עליך:</h2>
+            <div className="space-y-3 mb-6">
+              {topGenres.map((item, idx) => (
                 <motion.div
-                  key={artist}
+                  key={item.genre}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.08 }}
+                  transition={{ delay: 0.3 + idx * 0.08 }}
                   className="flex items-center gap-4"
                 >
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] flex items-center justify-center text-xl font-bold">
                     {idx + 1}
                   </div>
                   <div className="flex-1 bg-[#0F172A] rounded-xl p-3 border border-[#334155]">
-                    <p className="text-lg font-bold">{artist}</p>
-                    <p className="text-xs text-slate-400">
-                      נבחר {selections.filter(s => s.selected === artist).length} פעמים
-                    </p>
+                    <p className="text-lg font-bold">{item.genre}</p>
+                    <p className="text-xs text-slate-400">{item.count} בחירות</p>
                   </div>
                 </motion.div>
               ))}
-            </div>
-
-            <div className="border-t border-[#334155] pt-6 mb-6">
-              <h2 className="text-xl font-bold mb-4 neon-text">הז'אנרים האהובים עליך:</h2>
-              <div className="space-y-3">
-                {topGenres.map((item, idx) => (
-                  <motion.div
-                    key={item.genre}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + idx * 0.08 }}
-                    className="flex items-center gap-4"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] flex items-center justify-center text-xl font-bold">
-                      {idx + 1}
-                    </div>
-                    <div className="flex-1 bg-[#0F172A] rounded-xl p-3 border border-[#334155]">
-                      <p className="text-lg font-bold">{item.genre}</p>
-                      <p className="text-xs text-slate-400">{item.count} בחירות</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
             </div>
 
             {recommendedSongs.length > 0 && (
               <div className="border-t border-[#334155] pt-6 mb-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Guitar className="w-6 h-6 text-[#00F0FF]" />
-                  <h3 className="text-xl font-bold neon-text">שירים וריפים מומלצים ללימוד:</h3>
+                  <h3 className="text-xl font-bold neon-text">שירים וריפים אייקוניים מותאמים אישית:</h3>
+                  <span className="text-sm text-slate-400">({recommendedSongs.length} המלצות)</span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <p className="text-sm text-slate-400 mb-4">
+                  כל השירים האלה נבחרו במיוחד בשבילך, עם דגש על ריפים מזוהים, אקורדים פשוטים וטאבים קלים ללמידה 🎸
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[500px] overflow-y-auto">
                   {recommendedSongs.map((song, idx) => (
                     <motion.div
                       key={idx}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.5 + idx * 0.1 }}
-                      className="bg-[#0F172A] rounded-lg p-4 border border-[#334155] hover:border-[#00F0FF] transition-all"
+                      transition={{ delay: 0.4 + idx * 0.03 }}
+                      className="bg-[#0F172A] rounded-lg p-3 border border-[#334155] hover:border-[#00F0FF] transition-all cursor-pointer"
                     >
                       <p className="text-sm text-slate-300">{song}</p>
                     </motion.div>
@@ -395,20 +594,7 @@ export default function MusicTaste() {
               </div>
             )}
 
-            <div className="border-t border-[#334155] pt-6 mb-6">
-              <h3 className="text-lg font-bold mb-4">הבחירות שלך:</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
-                {selections.map((s, idx) => (
-                  <div key={idx} className="bg-[#0F172A] rounded-lg p-3 text-sm border border-[#334155]">
-                    <span className="text-[#00F0FF] font-bold">{s.selected}</span>
-                    <span className="text-slate-500"> vs </span>
-                    <span className="text-slate-400">{s.trio.filter(p => p !== s.selected).join(', ')}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-4 justify-center pt-4">
               <NeonButton onClick={handleContinue} size="lg">
                 <Music className="w-5 h-5" />
                 המשך לענות
