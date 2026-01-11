@@ -61,15 +61,53 @@ export default function StudentForm({ student, onSave, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError('');
+    
+    // Validate phone numbers
+    if (!formData.phone && !formData.parent_phone) {
+      setError('חייב למלא לפחות טלפון אחד - תלמיד או הורה');
+      return;
+    }
+    
     onSave({
       ...formData,
       age: formData.age ? Number(formData.age) : null,
-      balance: Number(formData.balance)
+      balance: Number(formData.balance),
+      weekly_lessons: Number(formData.weekly_lessons)
     });
+  };
+
+  const addRecurringSlot = () => {
+    setFormData(prev => ({
+      ...prev,
+      recurring_schedule: [...prev.recurring_schedule, { day: 0, time: '16:00' }]
+    }));
+  };
+
+  const removeRecurringSlot = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      recurring_schedule: prev.recurring_schedule.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateRecurringSlot = (index, field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      recurring_schedule: prev.recurring_schedule.map((slot, i) => 
+        i === index ? { ...slot, [field]: field === 'day' ? Number(value) : value } : slot
+      )
+    }));
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {error && (
+        <div className="bg-red-500/20 border border-red-500 text-red-400 px-4 py-3 rounded-xl">
+          {error}
+        </div>
+      )}
+
       {/* Photo Upload */}
       <div className="flex flex-col items-center mb-6">
         <div className="relative">
@@ -95,66 +133,130 @@ export default function StudentForm({ student, onSave, onCancel }) {
         </div>
       </div>
 
+      <FormInput
+        label="שם תלמיד"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        required
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormInput
-          label="שם תלמיד"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="הכנס שם"
-          required
-        />
         <FormInput
           label="טלפון תלמיד"
           name="phone"
-          type="tel"
           value={formData.phone}
           onChange={handleChange}
-          placeholder="050-0000000"
-          required
+          placeholder="לא חובה אם יש טלפון הורה"
         />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormInput
           label="גיל"
           name="age"
           type="number"
           value={formData.age}
           onChange={handleChange}
-          placeholder="גיל התלמיד"
         />
-
       </div>
 
-      <div className="border-t border-[#334155] pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormInput
+          label="יתרת שיעורים"
+          name="balance"
+          type="number"
+          value={formData.balance}
+          onChange={handleChange}
+        />
+        <FormInput
+          label="תלמיד פעיל"
+          name="is_active"
+          type="checkbox"
+          checked={formData.is_active}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="border-t border-[#334155] pt-6">
+        <h3 className="text-lg font-bold mb-4">פרטי קשר</h3>
+        
+        <FormInput
+          label="צור קשר עם הורה?"
           name="contact_parent"
           type="checkbox"
-          value={formData.contact_parent}
+          checked={formData.contact_parent}
           onChange={handleChange}
-          placeholder="צור קשר עם הורה במקום תלמיד"
         />
 
         {formData.contact_parent && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 p-4 bg-[#0F172A] rounded-xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
             <FormInput
               label="שם הורה"
               name="parent_name"
               value={formData.parent_name}
               onChange={handleChange}
-              placeholder="שם ההורה"
             />
             <FormInput
               label="טלפון הורה"
               name="parent_phone"
-              type="tel"
               value={formData.parent_phone}
               onChange={handleChange}
-              placeholder="050-0000000"
+              placeholder="חובה אם אין טלפון תלמיד"
             />
           </div>
         )}
+      </div>
+
+      <div className="border-t border-[#334155] pt-6">
+        <h3 className="text-lg font-bold mb-4">שיעורים קבועים</h3>
+        
+        <FormInput
+          label="מספר שיעורים בשבוע"
+          name="weekly_lessons"
+          type="number"
+          value={formData.weekly_lessons}
+          onChange={handleChange}
+          min="0"
+        />
+
+        <div className="mt-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium text-slate-300">ימים ושעות קבועים</label>
+            <NeonButton type="button" size="sm" variant="secondary" onClick={addRecurringSlot}>
+              <Plus size={16} />
+              הוסף מועד
+            </NeonButton>
+          </div>
+
+          {formData.recurring_schedule.map((slot, index) => (
+            <div key={index} className="flex gap-2 items-center p-3 bg-[#0F172A] rounded-xl border border-[#334155]">
+              <select
+                value={slot.day}
+                onChange={(e) => updateRecurringSlot(index, 'day', e.target.value)}
+                className="flex-1 bg-[#0F172A] border border-[#334155] rounded-lg px-3 py-2 text-white"
+              >
+                {DAYS.map((day, idx) => (
+                  <option key={idx} value={idx}>{day}</option>
+                ))}
+              </select>
+              <input
+                type="time"
+                value={slot.time}
+                onChange={(e) => updateRecurringSlot(index, 'time', e.target.value)}
+                className="flex-1 bg-[#0F172A] border border-[#334155] rounded-lg px-3 py-2 text-white"
+              />
+              <button
+                type="button"
+                onClick={() => removeRecurringSlot(index)}
+                className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-red-400"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          ))}
+
+          {formData.recurring_schedule.length === 0 && (
+            <p className="text-sm text-slate-500 text-center py-4">אין שיעורים קבועים מוגדרים</p>
+          )}
+        </div>
       </div>
 
       <div className="flex gap-3 pt-4">
