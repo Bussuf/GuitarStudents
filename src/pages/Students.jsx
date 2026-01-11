@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, LayoutGrid, Table2, Phone, MessageCircle, AlertTriangle } from 'lucide-react';
+import { Plus, LayoutGrid, Table2, Phone, MessageCircle, AlertTriangle, Edit2, Trash2 } from 'lucide-react';
 import moment from 'moment';
 
 import FullScreenModal from '../components/ui/FullScreenModal';
@@ -50,6 +50,13 @@ export default function Students() {
       queryClient.invalidateQueries({ queryKey: ['students'] });
       setModalOpen(false);
       setEditingStudent(null);
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Student.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['students'] });
     }
   });
 
@@ -138,14 +145,21 @@ export default function Students() {
         <MessageCircle size={16} />
       </button>
       <button
-        onClick={(e) => { e.stopPropagation(); toggleArchive(student); }}
-        className={`px-2 py-1 rounded-lg text-xs transition-colors ${
-          student.is_active === false 
-            ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30' 
-            : 'bg-slate-600/20 text-slate-400 hover:bg-slate-600/30'
-        }`}
+        onClick={(e) => { e.stopPropagation(); handleEdit(student); }}
+        className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-slate-400 hover:text-white"
       >
-        {student.is_active === false ? 'שחזר' : 'ארכב'}
+        <Edit2 size={16} />
+      </button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          if (confirm('האם למחוק את התלמיד?')) {
+            deleteMutation.mutate(student.id);
+          }
+        }}
+        className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-red-400"
+      >
+        <Trash2 size={16} />
       </button>
     </div>
   );

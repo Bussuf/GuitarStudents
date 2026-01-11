@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Plus, LayoutGrid, Table2, Phone, MessageCircle, UserPlus } from 'lucide-react';
+import { Plus, LayoutGrid, Table2, Phone, MessageCircle, UserPlus, Edit2, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 
@@ -47,6 +47,13 @@ export default function Leads() {
       queryClient.invalidateQueries({ queryKey: ['leads'] });
       setModalOpen(false);
       setEditingLead(null);
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id) => base44.entities.Lead.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['leads'] });
     }
   });
 
@@ -121,10 +128,21 @@ export default function Leads() {
         <MessageCircle size={16} />
       </button>
       <button
-        onClick={(e) => { e.stopPropagation(); handleConvertToStudent(lead); }}
-        className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-emerald-400"
+        onClick={(e) => { e.stopPropagation(); handleEdit(lead); }}
+        className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-slate-400 hover:text-white"
       >
-        <UserPlus size={16} />
+        <Edit2 size={16} />
+      </button>
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          if (confirm('האם למחוק את הליד?')) {
+            deleteMutation.mutate(lead.id);
+          }
+        }}
+        className="p-2 hover:bg-[#334155] rounded-lg transition-colors text-red-400"
+      >
+        <Trash2 size={16} />
       </button>
     </div>
   );
