@@ -172,13 +172,7 @@ export default function Layout({ children, currentPageName }) {
           </ul>
         </nav>
 
-        <div className="absolute bottom-0 right-0 left-0 p-4">
-          <div className="neon-border rounded-xl p-4">
-            <p className="text-xs text-slate-400 text-center">
-              Powered by AI 🎸
-            </p>
-          </div>
-        </div>
+
       </aside>
 
       {/* Mobile Overlay */}
