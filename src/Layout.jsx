@@ -21,6 +21,7 @@ const navItems = [
   { name: 'יומן שיעורים', icon: Calendar, page: 'Lessons' },
   { name: 'כספים וחבילות', icon: Wallet, page: 'Finance' },
   { name: 'חומרי לימוד', icon: BookOpen, page: 'Resources' },
+  { name: 'מצא טעם מוזיקלי', icon: Guitar, page: 'MusicTaste' },
   { name: 'הגדרות', icon: Settings, page: 'Settings' },
 ];
 

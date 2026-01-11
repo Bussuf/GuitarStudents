@@ -24,7 +24,9 @@ export default function Settings() {
       { name: 'ליד חדש', message: 'שלום {name}, ראיתי שהתעניינת בשיעורי גיטרה! אשמח לספר לך עוד 🎸', attach_price_image: true },
       { name: 'תזכורת לשיעור', message: 'היי {name}, רציתי להזכיר לך שיש לנו שיעור מחר! 🎵', attach_price_image: false }
     ],
-    motd: ''
+    motd: '',
+    notify_before_lesson: false,
+    notify_new_lead: false
   });
 
   const { data: settingsData = [], isLoading } = useQuery({
@@ -42,7 +44,9 @@ export default function Settings() {
           { name: 'ליד חדש', message: 'שלום {name}, ראיתי שהתעניינת בשיעורי גיטרה! אשמח לספר לך עוד 🎸', attach_price_image: true },
           { name: 'תזכורת לשיעור', message: 'היי {name}, רציתי להזכיר לך שיש לנו שיעור מחר! 🎵', attach_price_image: false }
         ],
-        motd: settingsData[0].motd || ''
+        motd: settingsData[0].motd || '',
+        notify_before_lesson: settingsData[0].notify_before_lesson || false,
+        notify_new_lead: settingsData[0].notify_new_lead || false
       });
     }
   }, [settingsData]);
@@ -341,6 +345,49 @@ export default function Settings() {
                       placeholder="כתוב הודעה מעוררת השראה..."
                       rows={2}
                     />
+                  </div>
+                </AccordionContent>
+              </CyberCard>
+            </AccordionItem>
+          </motion.div>
+
+          {/* Notifications */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+            <AccordionItem value="notifications" className="border-0">
+              <CyberCard>
+                <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <MessageCircle className="w-5 h-5 text-[#00F0FF]" />
+                    <h2 className="text-xl font-bold">התראות</h2>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-6">
+                  <div className="pt-2 space-y-4">
+                    <div className="flex items-center gap-3 p-3 bg-[#0F172A] rounded-xl">
+                      <input
+                        type="checkbox"
+                        id="notify-lesson"
+                        checked={formData.notify_before_lesson || false}
+                        onChange={(e) => setFormData(prev => ({ ...prev, notify_before_lesson: e.target.checked }))}
+                        className="w-5 h-5 rounded accent-[#00F0FF]"
+                      />
+                      <label htmlFor="notify-lesson" className="text-slate-300 cursor-pointer flex-1">
+                        שלח התראה 15 דקות לפני שיעור
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 p-3 bg-[#0F172A] rounded-xl">
+                      <input
+                        type="checkbox"
+                        id="notify-lead"
+                        checked={formData.notify_new_lead || false}
+                        onChange={(e) => setFormData(prev => ({ ...prev, notify_new_lead: e.target.checked }))}
+                        className="w-5 h-5 rounded accent-[#00F0FF]"
+                      />
+                      <label htmlFor="notify-lead" className="text-slate-300 cursor-pointer flex-1">
+                        שלח התראה על ליד חדש
+                      </label>
+                    </div>
                   </div>
                 </AccordionContent>
               </CyberCard>
