@@ -242,12 +242,21 @@ export default function MusicTaste() {
   const [askedCombinations, setAskedCombinations] = useState([]);
   const [aiReview, setAiReview] = useState('');
   const [loadingReview, setLoadingReview] = useState(false);
+  const [justReached10, setJustReached10] = useState(false);
+  const [showUpgradeMessage, setShowUpgradeMessage] = useState(false);
 
   useEffect(() => {
     shuffleTrios();
   }, []);
 
   useEffect(() => {
+    if (selections.length === 10 && !justReached10) {
+      setJustReached10(true);
+      setShowUpgradeMessage(true);
+      triggerConfetti();
+      setTimeout(() => setShowUpgradeMessage(false), 4000);
+    }
+    
     if (selections.length === 15 && !justReached15) {
       setJustReached15(true);
       triggerConfetti();
@@ -619,6 +628,8 @@ ${topGenres.slice(0, 5).map((g, i) => `${i + 1}. ${g.genre} (${g.count} בחיר
   }
 
   const currentTrio = shuffledTrios[currentIndex];
+  const isThreeArtistMode = selections.length >= 10;
+  const displayedArtists = isThreeArtistMode ? currentTrio.trio : currentTrio.trio.slice(0, 2);
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
@@ -629,10 +640,37 @@ ${topGenres.slice(0, 5).map((g, i) => `${i + 1}. ${g.genre} (${g.count} בחיר
           </div>
           <div>
             <h1 className="text-3xl font-bold">מצא את הטעם המוזיקלי שלך</h1>
-            <p className="text-slate-400">בחר את האמן המועדף עליך מכל שלושה</p>
+            <p className="text-slate-400">
+              {isThreeArtistMode ? 'בחר את האמן המועדף עליך מכל שלושה' : 'בחר את האמן המועדף עליך'}
+            </p>
           </div>
         </div>
       </motion.div>
+      
+      <AnimatePresence>
+        {showUpgradeMessage && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: -20 }}
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
+          >
+            <div className="bg-gradient-to-r from-[#00F0FF] to-[#BD00FF] p-1 rounded-2xl">
+              <div className="bg-[#0F172A] rounded-2xl p-8 text-center">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, ease: "easeInOut" }}
+                  className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] flex items-center justify-center"
+                >
+                  <Sparkles className="w-10 h-10 text-white" />
+                </motion.div>
+                <h2 className="text-3xl font-bold neon-text mb-2">שדרוג למצב מתקדם!</h2>
+                <p className="text-xl text-slate-300">עכשיו תבחר מבין 3 אמנים 🎸</p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
         <div className="flex items-center justify-between mb-4">
@@ -708,11 +746,13 @@ ${topGenres.slice(0, 5).map((g, i) => `${i + 1}. ${g.genre} (${g.count} בחיר
         >
           <CyberCard className="p-8">
             <h2 className="text-2xl font-bold text-center mb-8 neon-text">
-              מי מהם מדבר אליך יותר?
+              {isThreeArtistMode ? 'מי מהם מדבר אליך יותר?' : 'מי מביניהם מדבר אליך יותר?'}
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {currentTrio.trio.map((artist, idx) => (
+            <div className={`grid grid-cols-1 gap-6 ${isThreeArtistMode ? 'md:grid-cols-3' : 'md:grid-cols-2 max-w-3xl mx-auto'}`}>
+              {displayedArtists.map((artist, idx) => {
+                const artistIndex = currentTrio.trio.indexOf(artist);
+                return (
                 <motion.button
                   key={artist}
                   initial={{ opacity: 0, y: 50, rotateY: -90 }}
@@ -751,11 +791,12 @@ ${topGenres.slice(0, 5).map((g, i) => `${i + 1}. ${g.genre} (${g.count} בחיר
                         {artist.charAt(0)}
                       </motion.div>
                       <h3 className="text-xl font-bold text-center">{artist}</h3>
-                      <p className="text-xs text-slate-400 text-center">{currentTrio.genres[idx]}</p>
+                      <p className="text-xs text-slate-400 text-center">{currentTrio.genres[artistIndex]}</p>
                     </div>
                   </motion.div>
                 </motion.button>
-              ))}
+              );
+              })}
             </div>
 
             <div className="mt-6 text-center">
@@ -763,7 +804,9 @@ ${topGenres.slice(0, 5).map((g, i) => `${i + 1}. ${g.genre} (${g.count} בחיר
                 לא מכיר / דלג
               </NeonButton>
               <p className="text-xs text-slate-500 mt-3 max-w-md mx-auto">
-                💡 ככל שתענו על יותר שאלות, התוצאות יהיו מדויקות יותר ונוכל להמליץ לכם על שירים וריפים מדויקים יותר שיתאימו לטעם שלכם!
+                {isThreeArtistMode 
+                  ? '💡 ככל שתענו על יותר שאלות, התוצאות יהיו מדויקות יותר ונוכל להמליץ לכם על שירים וריפים מדויקים יותר שיתאימו לטעם שלכם!'
+                  : '💡 ענו על 10 שאלות כדי לפתוח מצב השוואה מתקדם עם 3 אמנים!'}
               </p>
             </div>
           </CyberCard>
