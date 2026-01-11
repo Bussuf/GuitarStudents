@@ -9,14 +9,6 @@ export default function LowBalanceCard({ students }) {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-6">
-        <AlertTriangle className="w-5 h-5 text-[#00F0FF]" />
-        <h2 className="text-xl font-bold">תלמידים לחידוש</h2>
-        <span className="mr-auto bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full text-sm">
-          {lowBalanceStudents.length}
-        </span>
-      </div>
-
       {lowBalanceStudents.length === 0 ? (
         <p className="text-slate-400 text-center py-8">כל התלמידים מעודכנים 🎉</p>
       ) : (

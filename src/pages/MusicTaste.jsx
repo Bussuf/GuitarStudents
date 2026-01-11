@@ -21,6 +21,7 @@ export default function MusicTaste() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selections, setSelections] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [skippedCount, setSkippedCount] = useState(0);
 
   const handleSelect = (artist) => {
     const newSelections = [...selections, { 
@@ -37,10 +38,24 @@ export default function MusicTaste() {
     }
   };
 
+  const handleSkip = () => {
+    setSkippedCount(skippedCount + 1);
+    if (currentIndex < artistPairs.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      setShowResults(true);
+    }
+  };
+
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
-      setSelections(selections.slice(0, -1));
+      const prevSelection = selections[selections.length - 1];
+      if (prevSelection) {
+        setSelections(selections.slice(0, -1));
+      } else {
+        setSkippedCount(Math.max(0, skippedCount - 1));
+      }
     }
   };
 
@@ -48,6 +63,7 @@ export default function MusicTaste() {
     setCurrentIndex(0);
     setSelections([]);
     setShowResults(false);
+    setSkippedCount(0);
   };
 
   const getTopGenres = () => {
@@ -63,7 +79,38 @@ export default function MusicTaste() {
       .map(([genre]) => genre);
   };
 
+  const hasEnoughData = selections.length >= 3;
+
   if (showResults) {
+    if (!hasEnoughData) {
+      return (
+        <div className="space-y-6 max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] flex items-center justify-center">
+                <Sparkles className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold">צריך עוד קצת מידע</h1>
+                <p className="text-slate-400">ענית רק על {selections.length} שאלות</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <CyberCard className="p-8 text-center">
+            <p className="text-xl mb-6 text-slate-300">
+              כדי לקבל תוצאות מדויקות, אנחנו צריכים לפחות 3 בחירות.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <NeonButton onClick={handleReset} size="lg">
+                התחל מחדש
+              </NeonButton>
+            </div>
+          </CyberCard>
+        </div>
+      );
+    }
+
     const topGenres = getTopGenres();
     
     return (
@@ -197,6 +244,12 @@ export default function MusicTaste() {
                   </div>
                 </motion.button>
               ))}
+            </div>
+
+            <div className="mt-6 flex justify-center">
+              <NeonButton variant="ghost" onClick={handleSkip}>
+                לא מכיר / דלג
+              </NeonButton>
             </div>
           </CyberCard>
         </motion.div>

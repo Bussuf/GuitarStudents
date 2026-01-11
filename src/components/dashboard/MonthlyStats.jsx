@@ -41,12 +41,6 @@ export default function MonthlyStats({ finances, lessons, students }) {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-6">
-        <TrendingUp className="w-5 h-5 text-[#00F0FF]" />
-        <h2 className="text-xl font-bold">סטטיסטיקות החודש</h2>
-        <span className="mr-auto text-sm text-slate-400">{moment().format('MMMM YYYY')}</span>
-      </div>
-
       <div className="grid gap-4">
         {stats.map((stat, idx) => (
           <div

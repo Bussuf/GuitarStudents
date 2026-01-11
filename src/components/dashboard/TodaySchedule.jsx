@@ -11,12 +11,6 @@ export default function TodaySchedule({ lessons, students }) {
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-6">
-        <Calendar className="w-5 h-5 text-[#00F0FF]" />
-        <h2 className="text-xl font-bold">לוח זמנים היום</h2>
-        <span className="mr-auto text-sm text-slate-400">{lessons.length} שיעורים</span>
-      </div>
-
       {lessons.length === 0 ? (
         <p className="text-slate-400 text-center py-8">אין שיעורים להיום</p>
       ) : (
