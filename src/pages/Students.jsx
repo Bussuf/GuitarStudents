@@ -15,6 +15,7 @@ export default function Students() {
   const [viewMode, setViewMode] = useState('cards');
   const [modalOpen, setModalOpen] = useState(false);
   const [editingStudent, setEditingStudent] = useState(null);
+  const [showArchived, setShowArchived] = useState(false);
 
   const { data: students = [], isLoading } = useQuery({
     queryKey: ['students'],
@@ -56,6 +57,12 @@ export default function Students() {
   const handleEdit = (student) => {
     setEditingStudent(student);
     setModalOpen(true);
+  };
+
+  const toggleArchive = async (student) => {
+    const newStatus = !student.is_active;
+    await base44.entities.Student.update(student.id, { is_active: newStatus });
+    queryClient.invalidateQueries({ queryKey: ['students'] });
   };
 
   const handleWhatsApp = (student) => {
@@ -139,6 +146,21 @@ export default function Students() {
         </div>
 
         <div className="flex items-center gap-3">
+          <div className="flex bg-[#1E293B] rounded-xl p-1">
+            <button
+              onClick={() => setShowArchived(false)}
+              className={`px-3 py-2 rounded-lg text-sm transition-colors ${!showArchived ? 'bg-[#00F0FF]/20 text-[#00F0FF]' : 'text-slate-400 hover:text-white'}`}
+            >
+              פעילים ({allStudents.filter(s => s.is_active !== false).length})
+            </button>
+            <button
+              onClick={() => setShowArchived(true)}
+              className={`px-3 py-2 rounded-lg text-sm transition-colors ${showArchived ? 'bg-[#00F0FF]/20 text-[#00F0FF]' : 'text-slate-400 hover:text-white'}`}
+            >
+              ארכיון ({allStudents.filter(s => s.is_active === false).length})
+            </button>
+          </div>
+
           <div className="flex bg-[#1E293B] rounded-xl p-1">
             <button
               onClick={() => setViewMode('cards')}

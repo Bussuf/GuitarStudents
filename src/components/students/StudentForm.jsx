@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import FormInput from '../ui/FormInput';
 import NeonButton from '../ui/NeonButton';
-import { Save, X, Upload } from 'lucide-react';
+import { Save, X, Upload, Plus, Trash2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+
+const DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
 
 export default function StudentForm({ student, onSave, onCancel }) {
   const [formData, setFormData] = useState({
@@ -10,12 +12,16 @@ export default function StudentForm({ student, onSave, onCancel }) {
     phone: '',
     age: '',
     balance: 0,
+    is_active: true,
     contact_parent: false,
     parent_name: '',
     parent_phone: '',
-    photo_url: ''
+    photo_url: '',
+    weekly_lessons: 1,
+    recurring_schedule: []
   });
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (student) {
@@ -24,10 +30,13 @@ export default function StudentForm({ student, onSave, onCancel }) {
         phone: student.phone || '',
         age: student.age || '',
         balance: student.balance || 0,
+        is_active: student.is_active !== undefined ? student.is_active : true,
         contact_parent: student.contact_parent || false,
         parent_name: student.parent_name || '',
         parent_phone: student.parent_phone || '',
-        photo_url: student.photo_url || ''
+        photo_url: student.photo_url || '',
+        weekly_lessons: student.weekly_lessons || 1,
+        recurring_schedule: student.recurring_schedule || []
       });
     }
   }, [student]);
@@ -115,13 +124,7 @@ export default function StudentForm({ student, onSave, onCancel }) {
           onChange={handleChange}
           placeholder="גיל התלמיד"
         />
-        <FormInput
-          label="יתרת שיעורים"
-          name="balance"
-          type="number"
-          value={formData.balance}
-          onChange={handleChange}
-        />
+
       </div>
 
       <div className="border-t border-[#334155] pt-4">
