@@ -12,6 +12,7 @@ import DataTable from '../components/ui/DataTable';
 import StatusBadge from '../components/ui/StatusBadge';
 import LeadForm from '../components/leads/LeadForm';
 import LeadKanban from '../components/leads/LeadKanban';
+import MarketingAdvisor from '../components/leads/MarketingAdvisor';
 
 export default function Leads() {
   const navigate = useNavigate();
@@ -171,6 +172,9 @@ export default function Leads() {
           </NeonButton>
         </div>
       </motion.div>
+
+      {/* Marketing Advisor */}
+      <MarketingAdvisor leads={leads} />
 
       {/* Content */}
       <motion.div
