@@ -2,10 +2,10 @@ import Dashboard from './pages/Dashboard';
 import Finance from './pages/Finance';
 import Leads from './pages/Leads';
 import Lessons from './pages/Lessons';
+import MusicTaste from './pages/MusicTaste';
 import Resources from './pages/Resources';
 import Settings from './pages/Settings';
 import Students from './pages/Students';
-import MusicTaste from './pages/MusicTaste';
 import __Layout from './Layout.jsx';
 
 
@@ -14,10 +14,10 @@ export const PAGES = {
     "Finance": Finance,
     "Leads": Leads,
     "Lessons": Lessons,
+    "MusicTaste": MusicTaste,
     "Resources": Resources,
     "Settings": Settings,
     "Students": Students,
-    "MusicTaste": MusicTaste,
 }
 
 export const pagesConfig = {
