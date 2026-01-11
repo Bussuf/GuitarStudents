@@ -76,6 +76,7 @@ export default function MusicTaste() {
   const [skippedCount, setSkippedCount] = useState(0);
   const [justReached15, setJustReached15] = useState(false);
   const [showButton, setShowButton] = useState(false);
+  const [askedCombinations, setAskedCombinations] = useState([]);
 
   useEffect(() => {
     shuffleTrios();
@@ -95,8 +96,23 @@ export default function MusicTaste() {
       .map(trio => ({
         ...trio,
         trio: [...trio.trio].sort(() => Math.random() - 0.5)
-      }));
-    setShuffledTrios(shuffled);
+      }))
+      .filter(trio => {
+        const key = trio.trio.sort().join('|');
+        return !askedCombinations.includes(key);
+      });
+    
+    if (shuffled.length === 0) {
+      setAskedCombinations([]);
+      setShuffledTrios([...allArtistTrios]
+        .sort(() => Math.random() - 0.5)
+        .map(trio => ({
+          ...trio,
+          trio: [...trio.trio].sort(() => Math.random() - 0.5)
+        })));
+    } else {
+      setShuffledTrios(shuffled);
+    }
   };
 
   const triggerConfetti = () => {
@@ -130,12 +146,16 @@ export default function MusicTaste() {
   };
 
   const handleSelect = (artist) => {
+    const currentTrio = shuffledTrios[currentIndex];
+    const key = [...currentTrio.trio].sort().join('|');
+    
     const newSelections = [...selections, { 
-      trio: shuffledTrios[currentIndex].trio, 
+      trio: currentTrio.trio, 
       selected: artist,
-      genres: shuffledTrios[currentIndex].genres 
+      genres: currentTrio.genres 
     }];
     setSelections(newSelections);
+    setAskedCombinations([...askedCombinations, key]);
 
     if (currentIndex < shuffledTrios.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -146,7 +166,12 @@ export default function MusicTaste() {
   };
 
   const handleSkip = () => {
+    const currentTrio = shuffledTrios[currentIndex];
+    const key = [...currentTrio.trio].sort().join('|');
+    
     setSkippedCount(skippedCount + 1);
+    setAskedCombinations([...askedCombinations, key]);
+    
     if (currentIndex < shuffledTrios.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
@@ -174,6 +199,7 @@ export default function MusicTaste() {
     setSkippedCount(0);
     setJustReached15(false);
     setShowButton(false);
+    setAskedCombinations([]);
     shuffleTrios();
   };
 
@@ -198,11 +224,41 @@ export default function MusicTaste() {
       .map(([genre, count]) => ({ genre, count }));
   };
 
+  const getMostSelectedArtists = () => {
+    const artistCounts = {};
+    selections.forEach(s => {
+      artistCounts[s.selected] = (artistCounts[s.selected] || 0) + 1;
+    });
+    return Object.entries(artistCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([artist]) => artist);
+  };
+
   const getRecommendedSongs = () => {
+    const topArtists = getMostSelectedArtists();
     const topGenres = getTopGenres();
     const recommendations = [];
     
-    topGenres.slice(0, 3).forEach(({ genre }) => {
+    // Find trios that contain the top artists
+    const relevantTrios = allArtistTrios.filter(trio => 
+      trio.trio.some(artist => topArtists.includes(artist))
+    );
+    
+    // Get genres from relevant trios
+    const artistGenres = [];
+    relevantTrios.forEach(trio => {
+      trio.trio.forEach((artist, idx) => {
+        if (topArtists.includes(artist)) {
+          artistGenres.push(trio.genres[idx]);
+        }
+      });
+    });
+    
+    // Use artist-related genres first, then top genres
+    const allGenres = [...new Set([...artistGenres, ...topGenres.map(g => g.genre)])];
+    
+    allGenres.slice(0, 4).forEach((genre) => {
       const songs = songRecommendations[genre];
       if (songs) {
         recommendations.push(...songs);
@@ -252,6 +308,7 @@ export default function MusicTaste() {
     }
 
     const topGenres = getTopGenres();
+    const topArtists = getMostSelectedArtists();
     const recommendedSongs = getRecommendedSongs();
     
     return (
@@ -270,25 +327,50 @@ export default function MusicTaste() {
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
           <CyberCard className="p-8">
-            <h2 className="text-2xl font-bold mb-6 neon-text">הז'אנרים האהובים עליך:</h2>
-            <div className="space-y-4 mb-8">
-              {topGenres.map((item, idx) => (
+            <h2 className="text-2xl font-bold mb-6 neon-text">האמנים האהובים עליך:</h2>
+            <div className="space-y-3 mb-8">
+              {topArtists.slice(0, 5).map((artist, idx) => (
                 <motion.div
-                  key={item.genre}
+                  key={artist}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1 }}
+                  transition={{ delay: idx * 0.08 }}
                   className="flex items-center gap-4"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] flex items-center justify-center text-2xl font-bold">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] flex items-center justify-center text-xl font-bold">
                     {idx + 1}
                   </div>
-                  <div className="flex-1 bg-[#0F172A] rounded-xl p-4 border border-[#334155]">
-                    <p className="text-xl font-bold">{item.genre}</p>
-                    <p className="text-sm text-slate-400">{item.count} בחירות</p>
+                  <div className="flex-1 bg-[#0F172A] rounded-xl p-3 border border-[#334155]">
+                    <p className="text-lg font-bold">{artist}</p>
+                    <p className="text-xs text-slate-400">
+                      נבחר {selections.filter(s => s.selected === artist).length} פעמים
+                    </p>
                   </div>
                 </motion.div>
               ))}
+            </div>
+
+            <div className="border-t border-[#334155] pt-6 mb-6">
+              <h2 className="text-xl font-bold mb-4 neon-text">הז'אנרים האהובים עליך:</h2>
+              <div className="space-y-3">
+                {topGenres.map((item, idx) => (
+                  <motion.div
+                    key={item.genre}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 + idx * 0.08 }}
+                    className="flex items-center gap-4"
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] flex items-center justify-center text-xl font-bold">
+                      {idx + 1}
+                    </div>
+                    <div className="flex-1 bg-[#0F172A] rounded-xl p-3 border border-[#334155]">
+                      <p className="text-lg font-bold">{item.genre}</p>
+                      <p className="text-xs text-slate-400">{item.count} בחירות</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
             {recommendedSongs.length > 0 && (
