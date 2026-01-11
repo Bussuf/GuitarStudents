@@ -1,6 +1,5 @@
 import React from 'react';
 import { Calendar, Clock } from 'lucide-react';
-import CyberCard from '../ui/CyberCard';
 import StatusBadge from '../ui/StatusBadge';
 import moment from 'moment';
 
@@ -11,12 +10,10 @@ export default function TodaySchedule({ lessons, students }) {
   };
 
   return (
-    <CyberCard className="p-6">
+    <div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00F0FF]/20 to-[#BD00FF]/20 flex items-center justify-center">
-          <Calendar className="w-5 h-5 text-[#00F0FF]" />
-        </div>
-        <h3 className="text-lg font-bold">תזכורות להיום</h3>
+        <Calendar className="w-5 h-5 text-[#00F0FF]" />
+        <h2 className="text-xl font-bold">לוח זמנים היום</h2>
         <span className="mr-auto text-sm text-slate-400">{lessons.length} שיעורים</span>
       </div>
 
@@ -42,6 +39,6 @@ export default function TodaySchedule({ lessons, students }) {
           ))}
         </div>
       )}
-    </CyberCard>
+    </div>
   );
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Wallet, TrendingUp, Users, BookOpen } from 'lucide-react';
-import CyberCard from '../ui/CyberCard';
 import moment from 'moment';
 
 export default function MonthlyStats({ finances, lessons, students }) {
@@ -41,12 +40,10 @@ export default function MonthlyStats({ finances, lessons, students }) {
   ];
 
   return (
-    <CyberCard className="p-6">
+    <div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-emerald-600/20 flex items-center justify-center">
-          <TrendingUp className="w-5 h-5 text-emerald-400" />
-        </div>
-        <h3 className="text-lg font-bold">מצב החודש</h3>
+        <TrendingUp className="w-5 h-5 text-[#00F0FF]" />
+        <h2 className="text-xl font-bold">סטטיסטיקות החודש</h2>
         <span className="mr-auto text-sm text-slate-400">{moment().format('MMMM YYYY')}</span>
       </div>
 
@@ -68,6 +65,6 @@ export default function MonthlyStats({ finances, lessons, students }) {
           </div>
         ))}
       </div>
-    </CyberCard>
+    </div>
   );
 }

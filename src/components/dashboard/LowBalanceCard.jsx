@@ -1,6 +1,5 @@
 import React from 'react';
 import { AlertTriangle, User } from 'lucide-react';
-import CyberCard from '../ui/CyberCard';
 import NeonButton from '../ui/NeonButton';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
@@ -9,12 +8,10 @@ export default function LowBalanceCard({ students }) {
   const lowBalanceStudents = students.filter(s => s.balance <= 1);
 
   return (
-    <CyberCard className="p-6">
+    <div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
-          <AlertTriangle className="w-5 h-5 text-yellow-400" />
-        </div>
-        <h3 className="text-lg font-bold">צריך חידוש</h3>
+        <AlertTriangle className="w-5 h-5 text-[#00F0FF]" />
+        <h2 className="text-xl font-bold">תלמידים לחידוש</h2>
         <span className="mr-auto bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full text-sm">
           {lowBalanceStudents.length}
         </span>
@@ -49,6 +46,6 @@ export default function LowBalanceCard({ students }) {
           ))}
         </div>
       )}
-    </CyberCard>
+    </div>
   );
 }
