@@ -1,0 +1,160 @@
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { ChevronRight, ChevronLeft, Plus } from 'lucide-react';
+import moment from 'moment';
+import 'moment/locale/he';
+import StatusBadge from '../ui/StatusBadge';
+import NeonButton from '../ui/NeonButton';
+
+moment.locale('he');
+
+export default function LessonCalendar({ lessons, onLessonClick, onAddLesson }) {
+  const [currentDate, setCurrentDate] = useState(moment());
+  const [view, setView] = useState('week'); // 'week' or 'month'
+
+  const goToPrev = () => {
+    setCurrentDate(prev => prev.clone().subtract(1, view === 'week' ? 'week' : 'month'));
+  };
+
+  const goToNext = () => {
+    setCurrentDate(prev => prev.clone().add(1, view === 'week' ? 'week' : 'month'));
+  };
+
+  const goToToday = () => {
+    setCurrentDate(moment());
+  };
+
+  // Get days for current view
+  const getDays = () => {
+    if (view === 'week') {
+      const start = currentDate.clone().startOf('week');
+      return Array.from({ length: 7 }, (_, i) => start.clone().add(i, 'days'));
+    } else {
+      const start = currentDate.clone().startOf('month').startOf('week');
+      const end = currentDate.clone().endOf('month').endOf('week');
+      const days = [];
+      let day = start.clone();
+      while (day.isSameOrBefore(end)) {
+        days.push(day.clone());
+        day.add(1, 'day');
+      }
+      return days;
+    }
+  };
+
+  const getLessonsForDay = (day) => {
+    return lessons.filter(l => 
+      moment(l.date_time).isSame(day, 'day')
+    ).sort((a, b) => moment(a.date_time).diff(moment(b.date_time)));
+  };
+
+  const days = getDays();
+  const isToday = (day) => day.isSame(moment(), 'day');
+  const isCurrentMonth = (day) => day.isSame(currentDate, 'month');
+
+  return (
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <h2 className="text-xl font-bold">{currentDate.format('MMMM YYYY')}</h2>
+          <div className="flex gap-1">
+            <button
+              onClick={() => setView('week')}
+              className={`px-3 py-1 rounded-lg text-sm transition-colors ${view === 'week' ? 'bg-[#00F0FF]/20 text-[#00F0FF]' : 'text-slate-400 hover:text-white'}`}
+            >
+              שבוע
+            </button>
+            <button
+              onClick={() => setView('month')}
+              className={`px-3 py-1 rounded-lg text-sm transition-colors ${view === 'month' ? 'bg-[#00F0FF]/20 text-[#00F0FF]' : 'text-slate-400 hover:text-white'}`}
+            >
+              חודש
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <NeonButton variant="ghost" size="sm" onClick={goToToday}>
+            היום
+          </NeonButton>
+          <button onClick={goToPrev} className="p-2 hover:bg-[#334155] rounded-lg transition-colors">
+            <ChevronRight size={20} />
+          </button>
+          <button onClick={goToNext} className="p-2 hover:bg-[#334155] rounded-lg transition-colors">
+            <ChevronLeft size={20} />
+          </button>
+        </div>
+      </div>
+
+      {/* Calendar Grid */}
+      <div className="bg-[#1E293B] rounded-2xl border border-[#334155] overflow-hidden">
+        {/* Day Headers */}
+        <div className="grid grid-cols-7 border-b border-[#334155]">
+          {['א׳', 'ב׳', 'ג׳', 'ד׳', 'ה׳', 'ו׳', 'ש׳'].map((day, idx) => (
+            <div key={idx} className="p-3 text-center text-sm text-slate-400 font-medium">
+              {day}
+            </div>
+          ))}
+        </div>
+
+        {/* Days Grid */}
+        <div className={`grid grid-cols-7 ${view === 'week' ? 'min-h-[400px]' : ''}`}>
+          {days.map((day, idx) => {
+            const dayLessons = getLessonsForDay(day);
+            return (
+              <div
+                key={idx}
+                className={`
+                  border-b border-l border-[#334155] p-2 min-h-[100px]
+                  ${isToday(day) ? 'bg-[#00F0FF]/5' : ''}
+                  ${!isCurrentMonth(day) && view === 'month' ? 'opacity-40' : ''}
+                `}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`
+                    w-7 h-7 flex items-center justify-center rounded-full text-sm
+                    ${isToday(day) ? 'bg-gradient-to-br from-[#00F0FF] to-[#BD00FF] text-white' : ''}
+                  `}>
+                    {day.format('D')}
+                  </span>
+                  <button
+                    onClick={() => onAddLesson(day)}
+                    className="opacity-0 hover:opacity-100 p-1 hover:bg-[#334155] rounded transition-all"
+                  >
+                    <Plus size={14} className="text-[#00F0FF]" />
+                  </button>
+                </div>
+
+                <div className="space-y-1">
+                  {dayLessons.slice(0, view === 'month' ? 3 : 10).map((lesson) => (
+                    <motion.div
+                      key={lesson.id}
+                      whileHover={{ scale: 1.02 }}
+                      onClick={() => onLessonClick(lesson)}
+                      className={`
+                        p-2 rounded-lg text-xs cursor-pointer transition-colors
+                        ${lesson.status === 'בוצע' ? 'bg-emerald-500/20 border-emerald-500/50' : ''}
+                        ${lesson.status === 'עתידי' ? 'bg-cyan-500/20 border-cyan-500/50' : ''}
+                        ${lesson.status === 'בוטל' ? 'bg-red-500/20 border-red-500/50' : ''}
+                        border
+                      `}
+                    >
+                      <p className="font-medium truncate">{lesson.student_name}</p>
+                      <p className="text-slate-400">{moment(lesson.date_time).format('HH:mm')}</p>
+                    </motion.div>
+                  ))}
+                  {dayLessons.length > (view === 'month' ? 3 : 10) && (
+                    <p className="text-xs text-slate-400 text-center">
+                      +{dayLessons.length - (view === 'month' ? 3 : 10)} נוספים
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
