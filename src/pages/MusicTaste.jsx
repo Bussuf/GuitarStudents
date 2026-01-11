@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Music, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { Music, ChevronLeft, ChevronRight, Sparkles, RefreshCw } from 'lucide-react';
 import CyberCard from '../components/ui/CyberCard';
 import NeonButton from '../components/ui/NeonButton';
 
-const artistPairs = [
+const allArtistPairs = [
   { pair: ['אריק איינשטיין', 'שלמה ארצי'], genres: ['רוק ישראלי קלאסי', 'פופ ישראלי'] },
   { pair: ['בוב דילן', 'לאונרד כהן'], genres: ['פולק', 'שירה פיוטית'] },
   { pair: ['פינק פלויד', 'לד זפלין'], genres: ['רוק פרוגרסיבי', 'הארד רוק'] },
@@ -14,44 +14,87 @@ const artistPairs = [
   { pair: ['דרייק', 'קנדריק למאר'], genres: ['היפ הופ', 'ראפ'] },
   { pair: ['קולדפליי', 'יו טו'], genres: ['רוק אלטרנטיבי', 'אינדי רוק'] },
   { pair: ['אד שירן', 'ג\'ון מאייר'], genres: ['סינגר סונגרייטר', 'פופ'] },
-  { pair: ['סטיבי וונדר', 'מרווין גיי'], genres: ['סול', 'Motown'] }
+  { pair: ['סטיבי וונדר', 'מרווין גיי'], genres: ['סול', 'Motown'] },
+  { pair: ['AC/DC', 'גאנס אנד רוזס'], genres: ['הארד רוק', 'רוק קלאסי'] },
+  { pair: ['דיפטי מוד', 'דה קיור'], genres: ['ניו ווייב', 'פוסט-פאנק'] },
+  { pair: ['בילי אייליש', 'לורד'], genres: ['אלקטרו-פופ', 'אלט-פופ'] },
+  { pair: ['טיילור סוויפט', 'אריאנה גרנדה'], genres: ['פופ', 'R&B'] },
+  { pair: ['די ביטלס', 'די רולינג סטונס'], genres: ['רוק קלאסי', 'בלוז רוק'] },
+  { pair: ['בוב מארלי', 'פיטר טוש'], genres: ['רגאיי', 'רגאיי'] },
+  { pair: ['מייקל ג\'קסון', 'פרינס'], genres: ['פופ', 'פאנק'] },
+  { pair: ['מוזס', 'רדיוהד'], genres: ['רוק אלטרנטיבי', 'ארט רוק'] },
+  { pair: ['איימי ווינהאוס', 'אדל'], genres: ['סול', 'פופ סול'] },
+  { pair: ['דייוויד בואי', 'אלביס פרסלי'], genres: ['גלאם רוק', 'רוקבילי'] },
+  { pair: ['אברהם טל', 'עומר אדם'], genres: ['מזרחית', 'מזרחית מודרנית'] },
+  { pair: ['עידן רייכל', 'אסף אמדורסקי'], genres: ['וורלד מיוזיק', 'רוק'] },
+  { pair: ['דודו טסה', 'משה פרץ'], genres: ['מזרחית', 'מזרחית'] },
+  { pair: ['ברי סחרוף', 'יהודה פוליקר'], genres: ['רוק ישראלי', 'רוק ישראלי'] },
+  { pair: ['אהוד בנאי', 'יוסי בנאי'], genres: ['שיר עברי', 'תיאטרון שירה'] },
+  { pair: ['נועה קירל', 'עדן בן זקן'], genres: ['פופ ישראלי', 'פופ ישראלי'] },
+  { pair: ['סטטיק ובן אל', 'אניה בוקשטיין'], genres: ['פופ', 'פופ ישראלי'] },
+  { pair: ['אייל גולן', 'לירז רוסו'], genres: ['מזרחית', 'מזרחית'] },
+  { pair: ['בילי הולידיי', 'אלה פיצג\'רלד'], genres: ['ג\'אז', 'ג\'אז'] },
+  { pair: ['לואי ארמסטרונג', 'דיוק אלינגטון'], genres: ['ג\'אז', 'ג\'אז'] },
+  { pair: ['ג\'וני קאש', 'וילי נלסון'], genres: ['קאנטרי', 'אאוטלו קאנטרי'] },
+  { pair: ['דולי פרטון', 'שאניה טוויין'], genres: ['קאנטרי', 'קאנטרי פופ'] },
+  { pair: ['סנופ דוג', 'דר. דרה'], genres: ['וסט קואסט ראפ', 'היפ הופ'] },
+  { pair: ['אמינם', 'טופאק'], genres: ['ראפ', 'ראפ'] },
+  { pair: ['איירון מיידן', 'ג\'ודאס פריסט'], genres: ['הבי מטאל', 'הבי מטאל'] },
+  { pair: ['סליפנוט', 'קורן'], genres: ['נו-מטאל', 'נו-מטאל'] },
+  { pair: ['דוואק', 'סקרילקס'], genres: ['דאבסטפ', 'אלקטרוניקה'] },
+  { pair: ['דפט פאנק', 'די קמיקל ברדרס'], genres: ['אלקטרו', 'ביג ביט'] },
+  { pair: ['ארקטיק מאנקיס', 'די סטרוקס'], genres: ['אינדי רוק', 'גראז\' רוק'] },
+  { pair: ['פוסטר דה פיפול', 'קייג\' די אלפנט'], genres: ['אינדי', 'סייקדליק רוק'] }
 ];
 
 export default function MusicTaste() {
+  const [shuffledPairs, setShuffledPairs] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selections, setSelections] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [skippedCount, setSkippedCount] = useState(0);
 
+  useEffect(() => {
+    shufflePairs();
+  }, []);
+
+  const shufflePairs = () => {
+    const shuffled = [...allArtistPairs].sort(() => Math.random() - 0.5);
+    setShuffledPairs(shuffled);
+  };
+
   const handleSelect = (artist) => {
     const newSelections = [...selections, { 
-      pair: artistPairs[currentIndex].pair, 
+      pair: shuffledPairs[currentIndex].pair, 
       selected: artist,
-      genres: artistPairs[currentIndex].genres 
+      genres: shuffledPairs[currentIndex].genres 
     }];
     setSelections(newSelections);
 
-    if (currentIndex < artistPairs.length - 1) {
+    if (currentIndex < shuffledPairs.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setShowResults(true);
+      // Reached end, shuffle and continue
+      shufflePairs();
+      setCurrentIndex(0);
     }
   };
 
   const handleSkip = () => {
     setSkippedCount(skippedCount + 1);
-    if (currentIndex < artistPairs.length - 1) {
+    if (currentIndex < shuffledPairs.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setShowResults(true);
+      shufflePairs();
+      setCurrentIndex(0);
     }
   };
 
   const handlePrevious = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
-      const prevSelection = selections[selections.length - 1];
-      if (prevSelection) {
+      const lastSelection = selections[selections.length - 1];
+      if (lastSelection && JSON.stringify(lastSelection.pair) === JSON.stringify(shuffledPairs[currentIndex - 1]?.pair)) {
         setSelections(selections.slice(0, -1));
       } else {
         setSkippedCount(Math.max(0, skippedCount - 1));
@@ -64,6 +107,15 @@ export default function MusicTaste() {
     setSelections([]);
     setShowResults(false);
     setSkippedCount(0);
+    shufflePairs();
+  };
+
+  const handleViewResults = () => {
+    setShowResults(true);
+  };
+
+  const handleContinue = () => {
+    setShowResults(false);
   };
 
   const getTopGenres = () => {
@@ -75,11 +127,11 @@ export default function MusicTaste() {
     });
     return Object.entries(genreCounts)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([genre]) => genre);
+      .slice(0, 5)
+      .map(([genre, count]) => ({ genre, count }));
   };
 
-  const hasEnoughData = selections.length >= 3;
+  const hasEnoughData = selections.length >= 15;
 
   if (showResults) {
     if (!hasEnoughData) {
@@ -99,10 +151,16 @@ export default function MusicTaste() {
 
           <CyberCard className="p-8 text-center">
             <p className="text-xl mb-6 text-slate-300">
-              כדי לקבל תוצאות מדויקות, אנחנו צריכים לפחות 3 בחירות.
+              כדי לקבל תוצאות מדויקות, אנחנו צריכים לפחות 15 בחירות.
+            </p>
+            <p className="text-lg mb-6 text-slate-400">
+              עניתם עד כה על {selections.length} שאלות. המשיכו לענות!
             </p>
             <div className="flex gap-4 justify-center">
-              <NeonButton onClick={handleReset} size="lg">
+              <NeonButton onClick={handleContinue} size="lg">
+                המשך לענות
+              </NeonButton>
+              <NeonButton onClick={handleReset} variant="secondary" size="lg">
                 התחל מחדש
               </NeonButton>
             </div>
@@ -131,9 +189,9 @@ export default function MusicTaste() {
           <CyberCard className="p-8">
             <h2 className="text-2xl font-bold mb-6 neon-text">הז'אנרים האהובים עליך:</h2>
             <div className="space-y-4 mb-8">
-              {topGenres.map((genre, idx) => (
+              {topGenres.map((item, idx) => (
                 <motion.div
-                  key={genre}
+                  key={item.genre}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.1 }}
@@ -143,15 +201,16 @@ export default function MusicTaste() {
                     {idx + 1}
                   </div>
                   <div className="flex-1 bg-[#0F172A] rounded-xl p-4 border border-[#334155]">
-                    <p className="text-xl font-bold">{genre}</p>
+                    <p className="text-xl font-bold">{item.genre}</p>
+                    <p className="text-sm text-slate-400">{item.count} בחירות</p>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            <div className="border-t border-[#334155] pt-6">
+            <div className="border-t border-[#334155] pt-6 mb-6">
               <h3 className="text-lg font-bold mb-4">הבחירות שלך:</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
                 {selections.map((s, idx) => (
                   <div key={idx} className="bg-[#0F172A] rounded-lg p-3 text-sm border border-[#334155]">
                     <span className="text-[#00F0FF] font-bold">{s.selected}</span>
@@ -162,8 +221,13 @@ export default function MusicTaste() {
               </div>
             </div>
 
-            <div className="mt-8 flex justify-center">
-              <NeonButton onClick={handleReset} size="lg">
+            <div className="flex gap-4 justify-center">
+              <NeonButton onClick={handleContinue} size="lg">
+                <Music className="w-5 h-5" />
+                המשך לענות
+              </NeonButton>
+              <NeonButton onClick={handleReset} variant="secondary" size="lg">
+                <RefreshCw className="w-5 h-5" />
                 התחל מחדש
               </NeonButton>
             </div>
@@ -173,7 +237,15 @@ export default function MusicTaste() {
     );
   }
 
-  const currentPair = artistPairs[currentIndex];
+  if (shuffledPairs.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="w-12 h-12 border-4 border-[#00F0FF] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  const currentPair = shuffledPairs[currentIndex];
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -191,8 +263,14 @@ export default function MusicTaste() {
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-slate-400 text-sm">שאלה {currentIndex + 1} מתוך {artistPairs.length}</span>
+          <div className="flex items-center gap-4">
+            <span className="text-slate-400 text-sm">תשובות: {selections.length}</span>
+            {selections.length >= 15 && (
+              <NeonButton variant="secondary" size="sm" onClick={handleViewResults}>
+                <Sparkles size={16} />
+                ראה תוצאות
+              </NeonButton>
+            )}
           </div>
           {currentIndex > 0 && (
             <NeonButton variant="ghost" size="sm" onClick={handlePrevious}>
@@ -204,8 +282,7 @@ export default function MusicTaste() {
 
         <div className="w-full bg-[#1E293B] h-2 rounded-full overflow-hidden mb-6">
           <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${((currentIndex + 1) / artistPairs.length) * 100}%` }}
+            animate={{ width: `${Math.min((selections.length / 15) * 100, 100)}%` }}
             className="h-full bg-gradient-to-r from-[#00F0FF] to-[#BD00FF]"
           />
         </div>

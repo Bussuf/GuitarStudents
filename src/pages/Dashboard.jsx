@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
@@ -21,6 +21,15 @@ import {
 moment.locale('he');
 
 export default function Dashboard() {
+  const [accordionState, setAccordionState] = React.useState(() => {
+    const saved = localStorage.getItem('dashboard-accordion-state');
+    return saved ? JSON.parse(saved) : ["next-lesson", "today-schedule", "low-balance", "monthly-stats"];
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('dashboard-accordion-state', JSON.stringify(accordionState));
+  }, [accordionState]);
+
   const { data: students = [] } = useQuery({
     queryKey: ['students'],
     queryFn: () => base44.entities.Student.list()
@@ -93,7 +102,7 @@ export default function Dashboard() {
       )}
 
       {/* Main Content */}
-      <Accordion type="multiple" defaultValue={["next-lesson", "today-schedule", "low-balance", "monthly-stats"]} className="space-y-6">
+      <Accordion type="multiple" value={accordionState} onValueChange={setAccordionState} className="space-y-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <AccordionItem value="next-lesson" className="border-0">
             <CyberCard>

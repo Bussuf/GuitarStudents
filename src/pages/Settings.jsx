@@ -16,6 +16,15 @@ import FormInput from '../components/ui/FormInput';
 export default function Settings() {
   const queryClient = useQueryClient();
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [accordionState, setAccordionState] = useState(() => {
+    const saved = localStorage.getItem('settings-accordion-state');
+    return saved ? JSON.parse(saved) : ["personal", "whatsapp"];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('settings-accordion-state', JSON.stringify(accordionState));
+  }, [accordionState]);
+
   const [formData, setFormData] = useState({
     teacher_name: '',
     default_lesson_price: '',
@@ -137,7 +146,7 @@ export default function Settings() {
       </motion.div>
 
       <form onSubmit={handleSubmit}>
-        <Accordion type="multiple" defaultValue={["personal", "whatsapp"]} className="space-y-4">
+        <Accordion type="multiple" value={accordionState} onValueChange={setAccordionState} className="space-y-4">
           {/* Personal Info */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
             <AccordionItem value="personal" className="border-0">
