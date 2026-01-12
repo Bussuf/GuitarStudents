@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
-import { base44 } from '@/api/base44Client';
 import { 
   LayoutDashboard, 
   Users, 
@@ -15,7 +14,7 @@ import {
   Guitar
 } from 'lucide-react';
 
-const teacherNavItems = [
+const navItems = [
   { name: 'לוח בקרה', icon: LayoutDashboard, page: 'Dashboard' },
   { name: 'ניהול לידים', icon: Users, page: 'Leads' },
   { name: 'תלמידים', icon: GraduationCap, page: 'Students' },
@@ -26,29 +25,8 @@ const teacherNavItems = [
   { name: 'הגדרות', icon: Settings, page: 'Settings' },
 ];
 
-const studentNavItems = [
-  { name: 'השיעורים שלי', icon: Calendar, page: 'MyLessons' },
-  { name: 'חומרי לימוד', icon: BookOpen, page: 'MyResources' },
-  { name: 'מצא טעם מוזיקלי', icon: Guitar, page: 'MusicTaste' },
-];
-
 export default function Layout({ children, currentPageName }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    base44.auth.me()
-      .then(userData => {
-        setUser(userData);
-        setIsLoading(false);
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
-  const navItems = user?.role === 'admin' ? teacherNavItems : studentNavItems;
 
   return (
     <div dir="rtl" className="min-h-screen bg-[#0F172A] text-white">

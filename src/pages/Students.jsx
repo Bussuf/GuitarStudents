@@ -10,7 +10,6 @@ import NeonButton from '../components/ui/NeonButton';
 import DataTable from '../components/ui/DataTable';
 import StudentForm from '../components/students/StudentForm';
 import StudentCard from '../components/students/StudentCard';
-import InviteStudentButton from '../components/students/InviteStudentButton';
 
 export default function Students() {
   const queryClient = useQueryClient();
@@ -217,7 +216,6 @@ export default function Students() {
             </button>
           </div>
 
-          <InviteStudentButton />
           <NeonButton onClick={() => { setEditingStudent(null); setModalOpen(true); }}>
             <Plus size={20} />
             תלמיד חדש

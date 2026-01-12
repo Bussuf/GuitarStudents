@@ -6,8 +6,6 @@ import MusicTaste from './pages/MusicTaste';
 import Resources from './pages/Resources';
 import Settings from './pages/Settings';
 import Students from './pages/Students';
-import MyLessons from './pages/MyLessons';
-import MyResources from './pages/MyResources';
 import __Layout from './Layout.jsx';
 
 
@@ -20,8 +18,6 @@ export const PAGES = {
     "Resources": Resources,
     "Settings": Settings,
     "Students": Students,
-    "MyLessons": MyLessons,
-    "MyResources": MyResources,
 }
 
 export const pagesConfig = {
