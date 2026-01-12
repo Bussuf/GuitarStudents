@@ -158,14 +158,16 @@ export default function Layout({ children, currentPageName }) {
                   to={createPageUrl(item.page)}
                   onClick={() => setSidebarOpen(false)}
                   className={`
-                    flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
+                    flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
+                    group relative overflow-hidden
                     ${currentPageName === item.page 
-                      ? 'nav-item-active text-[#00F0FF]' 
-                      : 'text-slate-400 hover:text-white hover:bg-[#1E293B]'}
+                      ? 'nav-item-active text-[#00F0FF] shadow-[0_0_15px_rgba(0,240,255,0.3)]' 
+                      : 'text-slate-400 hover:text-white hover:bg-[#1E293B] hover:scale-105 hover:shadow-[0_0_20px_rgba(0,240,255,0.15)] hover:translate-x-[-4px]'}
                   `}
                 >
-                  <item.icon size={20} />
-                  <span>{item.name}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#00F0FF]/0 via-[#00F0FF]/5 to-[#BD00FF]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <item.icon size={20} className="relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="relative z-10 group-hover:tracking-wide transition-all duration-300">{item.name}</span>
                 </Link>
               </li>
             ))}
