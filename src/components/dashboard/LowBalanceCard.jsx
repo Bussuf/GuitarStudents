@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 
 export default function LowBalanceCard({ students }) {
-  const lowBalanceStudents = students.filter(s => s.balance <= 1);
+  const lowBalanceStudents = students.filter(s => s.balance <= 1 && s.is_active !== false);
 
   return (
     <div>

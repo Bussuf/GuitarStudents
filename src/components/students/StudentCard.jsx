@@ -46,10 +46,10 @@ export default function StudentCard({ student, onEdit, onCall, onWhatsApp, upcom
           </div>
         </div>
 
-        {/* Balance */}
-        <div className="mb-4">
+        {/* Balance and Recurring Schedule */}
+        <div className="mb-4 grid grid-cols-2 gap-3">
           <div className="p-3 bg-[#0F172A] rounded-xl border border-[#334155]">
-            <p className="text-xs text-slate-400 mb-1">יתרת שיעורים</p>
+            <p className="text-xs text-slate-400 mb-1">יתרה</p>
             <p className={`text-xl font-bold ${
               (student.balance || 0) === 0 ? 'text-red-400' : 
               (student.balance || 0) <= 2 ? 'text-yellow-400' : 
@@ -58,24 +58,20 @@ export default function StudentCard({ student, onEdit, onCall, onWhatsApp, upcom
               {student.balance || 0}
             </p>
           </div>
+          
+          {student.recurring_schedule && student.recurring_schedule.length > 0 && (
+            <div className="p-3 bg-[#0F172A] rounded-xl border border-[#334155]">
+              <p className="text-xs text-slate-400 mb-1">שעות קבועות</p>
+              <div className="space-y-0.5">
+                {student.recurring_schedule.map((slot, idx) => (
+                  <p key={idx} className="text-xs text-slate-300">
+                    {DAYS[slot.day]} {slot.time}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-
-        {/* Recurring Schedule */}
-        {student.recurring_schedule && student.recurring_schedule.length > 0 && (
-          <div className="mb-4 p-3 bg-[#0F172A] rounded-xl border border-[#334155]">
-            <div className="flex items-center gap-2 mb-2">
-              <Calendar className="w-4 h-4 text-[#00F0FF]" />
-              <p className="text-xs text-slate-400">שעות קבועות</p>
-            </div>
-            <div className="space-y-1">
-              {student.recurring_schedule.map((slot, idx) => (
-                <p key={idx} className="text-sm text-slate-300">
-                  {DAYS[slot.day]} {slot.time}
-                </p>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Upcoming Lessons */}
         {nextLessons.length > 0 && (
@@ -84,7 +80,7 @@ export default function StudentCard({ student, onEdit, onCall, onWhatsApp, upcom
             <div className="space-y-1">
               {nextLessons.slice(0, 3).map((lesson, idx) => (
                 <p key={idx} className="text-sm text-slate-300">
-                  {moment(lesson.date_time).format('DD/MM HH:mm')}
+                  {moment(lesson.date_time).format('dddd, DD/MM HH:mm')}
                 </p>
               ))}
             </div>
