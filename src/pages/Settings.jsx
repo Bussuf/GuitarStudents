@@ -31,6 +31,7 @@ export default function Settings() {
     price_image_url: '',
     whatsapp_lead_template: '',
     whatsapp_student_template: '',
+    whatsapp_parent_template: '',
     motd: '',
     notify_before_lesson: false,
     notify_new_lead: false
@@ -49,6 +50,7 @@ export default function Settings() {
         price_image_url: settingsData[0].price_image_url || '',
         whatsapp_lead_template: settingsData[0].whatsapp_lead_template || 'היי {name}! תודה על הפנייה 🎸',
         whatsapp_student_template: settingsData[0].whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸',
+        whatsapp_parent_template: settingsData[0].whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}',
         motd: settingsData[0].motd || '',
         notify_before_lesson: settingsData[0].notify_before_lesson || false,
         notify_new_lead: settingsData[0].notify_new_lead || false
@@ -236,6 +238,18 @@ export default function Settings() {
                           <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{name}'}</code>
                           <span>שם התלמיד/ליד</span>
                         </div>
+                        <div className="flex items-center gap-2">
+                          <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{parent}'}</code>
+                          <span>שם ההורה</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{time}'}</code>
+                          <span>שעת השיעור</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{balance}'}</code>
+                          <span>יתרת שיעורים</span>
+                        </div>
                       </div>
                     </div>
 
@@ -257,9 +271,9 @@ export default function Settings() {
 
                       <div>
                         <label className="block text-sm font-medium text-slate-300 mb-2">
-                          הודעה לתלמידים
+                          הודעה לתלמידים (לטלפון התלמיד)
                         </label>
-                        <p className="text-xs text-slate-400 mb-2">תישלח כשלוחצים על כפתור וואטסאפ בדשבורד, בעמוד תלמידים או ביומן</p>
+                        <p className="text-xs text-slate-400 mb-2">תישלח כשההודעה מועברת ישירות לתלמיד</p>
                         <FormInput
                           name="whatsapp_student_template"
                           type="textarea"
@@ -267,6 +281,21 @@ export default function Settings() {
                           value={formData.whatsapp_student_template}
                           onChange={handleChange}
                           placeholder="היי {name}! תזכורת לשיעור שלנו 🎸"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                          הודעה להורים
+                        </label>
+                        <p className="text-xs text-slate-400 mb-2">תישלח כשההודעה מועברת להורה של התלמיד (בתלמידים עם "צור קשר עם הורה")</p>
+                        <FormInput
+                          name="whatsapp_parent_template"
+                          type="textarea"
+                          rows={3}
+                          value={formData.whatsapp_parent_template}
+                          onChange={handleChange}
+                          placeholder="היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}"
                         />
                       </div>
                     </div>

@@ -88,8 +88,19 @@ export default function Students() {
 
   const handleWhatsApp = (student) => {
     const contactPhone = student.contact_parent ? student.parent_phone : student.phone;
-    const template = settings.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸';
-    const message = encodeURIComponent(template.replace('{name}', student.name));
+    const contactName = student.contact_parent ? student.parent_name : student.name;
+    
+    let template = student.contact_parent 
+      ? (settings.whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}')
+      : (settings.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸');
+    
+    const message = encodeURIComponent(
+      template
+        .replace('{name}', student.name)
+        .replace('{parent}', contactName)
+        .replace('{time}', '')
+        .replace('{balance}', student.balance || 0)
+    );
     window.open(`https://wa.me/972${contactPhone?.replace(/^0/, '')}?text=${message}`, '_blank');
   };
 
