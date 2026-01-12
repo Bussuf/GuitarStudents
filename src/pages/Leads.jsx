@@ -96,7 +96,7 @@ export default function Leads() {
   };
 
   const handleWhatsApp = (lead) => {
-    const template = settings.whatsapp_new_lead || 'שלום {name}!';
+    const template = settings.whatsapp_lead_template || 'היי {name}! תודה על הפנייה 🎸';
     const message = encodeURIComponent(template.replace('{name}', lead.full_name));
     window.open(`https://wa.me/972${lead.phone?.replace(/^0/, '')}?text=${message}`, '_blank');
   };

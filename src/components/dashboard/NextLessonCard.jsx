@@ -20,9 +20,8 @@ export default function NextLessonCard({ lesson, student, settings }) {
   };
 
   const handleWhatsApp = () => {
-    const firstTemplate = settings?.whatsapp_templates?.[0];
-    const templateMessage = firstTemplate?.message || 'היי {name}, תזכורת לשיעור שלנו!';
-    const message = encodeURIComponent(templateMessage.replace('{name}', student.name));
+    const template = settings?.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸';
+    const message = encodeURIComponent(template.replace('{name}', student.name));
     window.open(`https://wa.me/972${contactPhone?.replace(/^0/, '')}?text=${message}`, '_blank');
   };
 

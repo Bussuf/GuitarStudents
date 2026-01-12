@@ -37,15 +37,17 @@ export default function StudentCard({ student, onEdit, onCall, onWhatsApp, upcom
                 <span className="text-xs bg-slate-600 px-2 py-0.5 rounded">ארכיון</span>
               )}
             </div>
-            <p className="text-slate-400 text-sm">{student.phone || 'אין טלפון'}</p>
+            {student.age && (
+              <p className="text-slate-400 text-sm">גיל: {student.age}</p>
+            )}
             {student.city && (
               <p className="text-slate-500 text-xs">📍 {student.city}</p>
             )}
           </div>
         </div>
 
-        {/* Balance & Schedule */}
-        <div className="mb-4 grid grid-cols-2 gap-3">
+        {/* Balance */}
+        <div className="mb-4">
           <div className="p-3 bg-[#0F172A] rounded-xl border border-[#334155]">
             <p className="text-xs text-slate-400 mb-1">יתרת שיעורים</p>
             <p className={`text-xl font-bold ${
@@ -54,12 +56,6 @@ export default function StudentCard({ student, onEdit, onCall, onWhatsApp, upcom
               'text-emerald-400'
             }`}>
               {student.balance || 0}
-            </p>
-          </div>
-          <div className="p-3 bg-[#0F172A] rounded-xl border border-[#334155]">
-            <p className="text-xs text-slate-400 mb-1">שיעורים/שבוע</p>
-            <p className="text-xl font-bold text-[#00F0FF]">
-              {student.weekly_lessons || 0}
             </p>
           </div>
         </div>
