@@ -57,11 +57,22 @@ export default function Leads() {
     }
   });
 
-  const handleSave = (data) => {
-    if (editingLead) {
-      updateMutation.mutate({ id: editingLead.id, data });
-    } else {
-      createMutation.mutate(data);
+  const handleSave = async (data) => {
+    try {
+      if (editingLead) {
+        updateMutation.mutate({ id: editingLead.id, data });
+      } else {
+        await createMutation.mutateAsync(data);
+        
+        // Send webhook for new lead
+        fetch('https://hook.eu1.make.com/45o0jplqjoohlbtkaoxndkvk4ko2lg7p', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+      }
+    } catch (error) {
+      console.error('Error saving lead:', error);
     }
   };
 
