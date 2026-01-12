@@ -62,14 +62,14 @@ export default function Leads() {
       if (editingLead) {
         updateMutation.mutate({ id: editingLead.id, data });
       } else {
-        const newLead = await createMutation.mutateAsync(data);
+        await createMutation.mutateAsync(data);
         
-        // Notify external webhook about new lead
-        try {
-          await base44.functions.invoke('notifyNewLead', { leadData: { ...data, id: newLead.id } });
-        } catch (error) {
-          console.error('Failed to notify webhook:', error);
-        }
+        // Send webhook for new lead
+        fetch('https://hook.eu1.make.com/45o0jplqjoohlbtkaoxndkvk4ko2lg7p', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
       }
     } catch (error) {
       console.error('Error saving lead:', error);
