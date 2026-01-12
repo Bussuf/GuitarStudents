@@ -132,11 +132,6 @@ export default function Students() {
       )
     },
     {
-      key: 'weekly_lessons',
-      label: 'שיעורים/שבוע',
-      render: (val) => val || 1
-    },
-    {
       key: 'contact_parent',
       label: 'קשר הורה',
       render: (val, row) => val ? (
