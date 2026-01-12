@@ -79,10 +79,17 @@ export default function Students() {
     queryClient.invalidateQueries({ queryKey: ['students'] });
   };
 
+  const { data: settingsData = [] } = useQuery({
+    queryKey: ['settings'],
+    queryFn: () => base44.entities.Settings.list()
+  });
+
+  const settings = settingsData[0] || {};
+
   const handleWhatsApp = (student) => {
     const contactPhone = student.contact_parent ? student.parent_phone : student.phone;
-    const contactName = student.contact_parent ? student.parent_name : student.name;
-    const message = encodeURIComponent(`שלום ${contactName}!`);
+    const template = settings.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸';
+    const message = encodeURIComponent(template.replace('{name}', student.name));
     window.open(`https://wa.me/972${contactPhone?.replace(/^0/, '')}?text=${message}`, '_blank');
   };
 
