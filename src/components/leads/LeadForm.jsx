@@ -10,6 +10,8 @@ export default function LeadForm({ lead, onSave, onCancel }) {
   const [formData, setFormData] = useState({
     full_name: '',
     phone: '',
+    age: '',
+    for_whom: 'עצמי',
     status: 'חדש',
     source: '',
     notes: ''
@@ -20,6 +22,8 @@ export default function LeadForm({ lead, onSave, onCancel }) {
       setFormData({
         full_name: lead.full_name || '',
         phone: lead.phone || '',
+        age: lead.age || '',
+        for_whom: lead.for_whom || 'עצמי',
         status: lead.status || 'חדש',
         source: lead.source || '',
         notes: lead.notes || ''
@@ -57,6 +61,42 @@ export default function LeadForm({ lead, onSave, onCancel }) {
           placeholder="050-0000000"
           required
         />
+        <FormInput
+          label="גיל"
+          name="age"
+          type="number"
+          value={formData.age}
+          onChange={handleChange}
+          placeholder="הכנס גיל"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-slate-300">מתעניין עבור</label>
+        <div className="flex gap-4">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="for_whom"
+              value="עצמי"
+              checked={formData.for_whom === 'עצמי'}
+              onChange={handleChange}
+              className="w-4 h-4 text-[#00F0FF] bg-[#1E293B] border-[#334155] focus:ring-[#00F0FF]"
+            />
+            <span className="text-slate-300">עצמי</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="for_whom"
+              value="מישהו אחר"
+              checked={formData.for_whom === 'מישהו אחר'}
+              onChange={handleChange}
+              className="w-4 h-4 text-[#00F0FF] bg-[#1E293B] border-[#334155] focus:ring-[#00F0FF]"
+            />
+            <span className="text-slate-300">מישהו אחר</span>
+          </label>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
