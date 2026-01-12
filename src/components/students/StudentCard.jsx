@@ -6,8 +6,6 @@ import CyberCard from '../ui/CyberCard';
 import moment from 'moment';
 import 'moment/locale/he';
 
-moment.locale('he');
-
 const DAYS = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
 
 export default function StudentCard({ student, onEdit, onCall, onWhatsApp, upcomingLessons, onToggleArchive, index }) {
@@ -80,7 +78,7 @@ export default function StudentCard({ student, onEdit, onCall, onWhatsApp, upcom
             <div className="space-y-1">
               {nextLessons.slice(0, 3).map((lesson, idx) => (
                 <p key={idx} className="text-sm text-slate-300">
-                  {moment(lesson.date_time).format('dddd, DD/MM HH:mm')}
+                  {moment(lesson.date_time).locale('he').format('dddd, DD/MM HH:mm')}
                 </p>
               ))}
             </div>
