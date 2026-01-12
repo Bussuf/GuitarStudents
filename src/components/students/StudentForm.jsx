@@ -18,7 +18,6 @@ export default function StudentForm({ student, onSave, onCancel }) {
     parent_name: '',
     parent_phone: '',
     photo_url: '',
-    weekly_lessons: 1,
     recurring_schedule: []
   });
   const [uploading, setUploading] = useState(false);
@@ -37,7 +36,6 @@ export default function StudentForm({ student, onSave, onCancel }) {
         parent_name: student.parent_name || '',
         parent_phone: student.parent_phone || '',
         photo_url: student.photo_url || '',
-        weekly_lessons: student.weekly_lessons || 1,
         recurring_schedule: student.recurring_schedule || []
       });
     }
@@ -74,8 +72,7 @@ export default function StudentForm({ student, onSave, onCancel }) {
     onSave({
       ...formData,
       age: formData.age ? Number(formData.age) : null,
-      balance: Number(formData.balance),
-      weekly_lessons: Number(formData.weekly_lessons)
+      balance: Number(formData.balance)
     });
   };
 
@@ -221,16 +218,7 @@ export default function StudentForm({ student, onSave, onCancel }) {
       <div className="border-t border-[#334155] pt-6">
         <h3 className="text-lg font-bold mb-4">שיעורים קבועים</h3>
         
-        <FormInput
-          label="מספר שיעורים בשבוע"
-          name="weekly_lessons"
-          type="number"
-          value={formData.weekly_lessons}
-          onChange={handleChange}
-          min="0"
-        />
-
-        <div className="mt-4 space-y-3">
+        <div className="space-y-3">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium text-slate-300">ימים ושעות קבועים</label>
             <NeonButton type="button" size="sm" variant="secondary" onClick={addRecurringSlot}>
