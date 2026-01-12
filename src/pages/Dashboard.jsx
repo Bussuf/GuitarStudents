@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Sparkles, Calendar, Users, TrendingUp, AlertCircle, Clock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '../utils';
 import moment from 'moment';
 import 'moment/locale/he';
 
@@ -21,6 +23,8 @@ import {
 moment.locale('he');
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  
   const [accordionState, setAccordionState] = React.useState(() => {
     const saved = localStorage.getItem('dashboard-accordion-state');
     return saved ? JSON.parse(saved) : ["next-lesson", "today-schedule", "low-balance", "monthly-stats"];
@@ -105,8 +109,11 @@ export default function Dashboard() {
       <Accordion type="multiple" value={accordionState} onValueChange={setAccordionState} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
           <AccordionItem value="next-lesson" className="border-0">
-            <CyberCard>
-              <AccordionTrigger className="px-6 py-4 hover:no-underline">
+            <CyberCard 
+              onClick={() => nextLessonStudent && navigate(createPageUrl('Students'))}
+              className="cursor-pointer"
+            >
+              <AccordionTrigger className="px-6 py-4 hover:no-underline" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center gap-3 w-full">
                   <Clock className="w-5 h-5 text-[#00F0FF]" />
                   <h2 className="text-xl font-bold">השיעור הבא</h2>
@@ -144,8 +151,11 @@ export default function Dashboard() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
           <AccordionItem value="today-schedule" className="border-0">
-            <CyberCard>
-              <AccordionTrigger className="px-6 py-4 hover:no-underline">
+            <CyberCard 
+              onClick={() => navigate(createPageUrl('Lessons'))}
+              className="cursor-pointer"
+            >
+              <AccordionTrigger className="px-6 py-4 hover:no-underline" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center gap-3 w-full">
                   <Calendar className="w-5 h-5 text-[#00F0FF]" />
                   <h2 className="text-xl font-bold">לוח זמנים היום</h2>
