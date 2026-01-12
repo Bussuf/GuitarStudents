@@ -29,10 +29,8 @@ export default function Settings() {
     teacher_name: '',
     default_lesson_price: '',
     price_image_url: '',
-    whatsapp_templates: [
-      { name: 'ליד חדש', message: 'שלום {name}, ראיתי שהתעניינת בשיעורי גיטרה! אשמח לספר לך עוד 🎸', attach_price_image: true },
-      { name: 'תזכורת לשיעור', message: 'היי {name}, רציתי להזכיר לך שיש לנו שיעור מחר! 🎵', attach_price_image: false }
-    ],
+    whatsapp_lead_template: '',
+    whatsapp_student_template: '',
     motd: '',
     notify_before_lesson: false,
     notify_new_lead: false
@@ -49,10 +47,8 @@ export default function Settings() {
         teacher_name: settingsData[0].teacher_name || '',
         default_lesson_price: settingsData[0].default_lesson_price || '',
         price_image_url: settingsData[0].price_image_url || '',
-        whatsapp_templates: settingsData[0].whatsapp_templates || [
-          { name: 'ליד חדש', message: 'שלום {name}, ראיתי שהתעניינת בשיעורי גיטרה! אשמח לספר לך עוד 🎸', attach_price_image: true },
-          { name: 'תזכורת לשיעור', message: 'היי {name}, רציתי להזכיר לך שיש לנו שיעור מחר! 🎵', attach_price_image: false }
-        ],
+        whatsapp_lead_template: settingsData[0].whatsapp_lead_template || 'היי {name}! תודה על הפנייה 🎸',
+        whatsapp_student_template: settingsData[0].whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸',
         motd: settingsData[0].motd || '',
         notify_before_lesson: settingsData[0].notify_before_lesson || false,
         notify_new_lead: settingsData[0].notify_new_lead || false
@@ -78,25 +74,7 @@ export default function Settings() {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleTemplateChange = (index, field, value) => {
-    const updated = [...formData.whatsapp_templates];
-    updated[index][field] = value;
-    setFormData(prev => ({ ...prev, whatsapp_templates: updated }));
-  };
 
-  const addTemplate = () => {
-    setFormData(prev => ({
-      ...prev,
-      whatsapp_templates: [...prev.whatsapp_templates, { name: '', message: '', attach_price_image: false }]
-    }));
-  };
-
-  const removeTemplate = (index) => {
-    setFormData(prev => ({
-      ...prev,
-      whatsapp_templates: prev.whatsapp_templates.filter((_, i) => i !== index)
-    }));
-  };
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -246,11 +224,11 @@ export default function Settings() {
                 <AccordionTrigger className="px-6 py-4 hover:no-underline">
                   <div className="flex items-center gap-3">
                     <MessageCircle className="w-5 h-5 text-[#25D366]" />
-                    <h2 className="text-xl font-bold">תבניות וואטסאפ</h2>
+                    <h2 className="text-xl font-bold">הודעות וואטסאפ</h2>
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pb-6">
-                  <div className="pt-2 space-y-4">
+                  <div className="pt-2 space-y-6">
                     <div className="bg-[#0F172A] border border-[#334155] rounded-xl p-4">
                       <h3 className="text-sm font-bold text-[#00F0FF] mb-3">משתנים זמינים:</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-300">
@@ -258,75 +236,40 @@ export default function Settings() {
                           <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{name}'}</code>
                           <span>שם התלמיד/ליד</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{parent}'}</code>
-                          <span>שם ההורה</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{date}'}</code>
-                          <span>תאריך השיעור</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{time}'}</code>
-                          <span>שעת השיעור</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{balance}'}</code>
-                          <span>יתרת שיעורים</span>
-                        </div>
                       </div>
                     </div>
 
-                    {formData.whatsapp_templates.map((template, index) => (
-                      <div key={index} className="border border-[#334155] rounded-xl p-4 space-y-3">
-                        <div className="flex items-start gap-3">
-                          <div className="flex-1">
-                            <FormInput
-                              label="שם התבנית"
-                              value={template.name}
-                              onChange={(e) => handleTemplateChange(index, 'name', e.target.value)}
-                              placeholder="לדוגמה: ליד חדש"
-                            />
-                          </div>
-                          {formData.whatsapp_templates.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => removeTemplate(index)}
-                              className="p-2 mt-6 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
-                            >
-                              <X size={20} />
-                            </button>
-                          )}
-                        </div>
-                        
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                          הודעה ללידים חדשים
+                        </label>
+                        <p className="text-xs text-slate-400 mb-2">תישלח כשלוחצים על כפתור וואטסאפ בעמוד ניהול הלידים</p>
                         <FormInput
-                          label="תוכן ההודעה"
+                          name="whatsapp_lead_template"
                           type="textarea"
-                          rows={4}
-                          value={template.message}
-                          onChange={(e) => handleTemplateChange(index, 'message', e.target.value)}
-                          placeholder="היי {name}, תודה שפנית אליי..."
+                          rows={3}
+                          value={formData.whatsapp_lead_template}
+                          onChange={handleChange}
+                          placeholder="היי {name}! תודה על הפנייה 🎸"
                         />
-
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            id={`attach-${index}`}
-                            checked={template.attach_price_image}
-                            onChange={(e) => handleTemplateChange(index, 'attach_price_image', e.target.checked)}
-                            className="w-4 h-4 rounded accent-[#00F0FF]"
-                          />
-                          <label htmlFor={`attach-${index}`} className="text-sm text-slate-300 cursor-pointer">
-                            צרף תמונת מחירון
-                          </label>
-                        </div>
                       </div>
-                    ))}
 
-                    <NeonButton type="button" onClick={addTemplate} variant="secondary" size="sm">
-                      <Plus size={16} />
-                      הוסף תבנית
-                    </NeonButton>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                          הודעה לתלמידים
+                        </label>
+                        <p className="text-xs text-slate-400 mb-2">תישלח כשלוחצים על כפתור וואטסאפ בדשבורד, בעמוד תלמידים או ביומן</p>
+                        <FormInput
+                          name="whatsapp_student_template"
+                          type="textarea"
+                          rows={3}
+                          value={formData.whatsapp_student_template}
+                          onChange={handleChange}
+                          placeholder="היי {name}! תזכורת לשיעור שלנו 🎸"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </AccordionContent>
               </CyberCard>
