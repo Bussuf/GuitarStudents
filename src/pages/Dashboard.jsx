@@ -138,7 +138,7 @@ export default function Dashboard() {
                   <AlertCircle className="w-5 h-5 text-[#00F0FF]" />
                   <h2 className="text-xl font-bold">כרטיסיות לחידוש</h2>
                   <span className="mr-auto bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded-full text-sm">
-                    {students.filter(s => s.balance <= 1).length}
+                    {students.filter(s => s.balance <= 1 && s.is_active !== false).length}
                   </span>
                 </div>
               </AccordionTrigger>
