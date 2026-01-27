@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, ChevronLeft, Plus } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Plus, MoreVertical, Trash2 } from 'lucide-react';
 import moment from 'moment';
 import 'moment/locale/he';
 import StatusBadge from '../ui/StatusBadge';
 import NeonButton from '../ui/NeonButton';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 moment.locale('he');
 
-export default function LessonCalendar({ lessons, onLessonClick, onAddLesson }) {
+export default function LessonCalendar({ lessons, onLessonClick, onAddLesson, onDeleteLesson }) {
   const [currentDate, setCurrentDate] = useState(moment());
   const [view, setView] = useState('week'); // 'week' or 'month'
 
@@ -133,17 +139,42 @@ export default function LessonCalendar({ lessons, onLessonClick, onAddLesson }) 
                     <motion.div
                       key={lesson.id}
                       whileHover={{ scale: 1.02 }}
-                      onClick={() => onLessonClick(lesson)}
                       className={`
-                        p-2 rounded-lg text-xs cursor-pointer transition-colors
+                        p-2 rounded-lg text-xs cursor-pointer transition-colors relative group
                         ${lesson.status === 'בוצע' ? 'bg-emerald-500/20 border-emerald-500/50' : ''}
                         ${lesson.status === 'עתידי' ? 'bg-cyan-500/20 border-cyan-500/50' : ''}
                         ${lesson.status === 'בוטל' ? 'bg-red-500/20 border-red-500/50' : ''}
                         border
                       `}
                     >
-                      <p className="font-medium truncate">{lesson.student_name}</p>
-                      <p className="text-slate-400">{moment(lesson.date_time).format('HH:mm')}</p>
+                      <div onClick={() => onLessonClick(lesson)}>
+                        <p className="font-medium truncate pr-6">{lesson.student_name}</p>
+                        <p className="text-slate-400">{moment(lesson.date_time).format('HH:mm')}</p>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            onClick={(e) => e.stopPropagation()}
+                            className="absolute top-1 left-1 p-1 opacity-0 group-hover:opacity-100 hover:bg-[#334155] rounded transition-all"
+                          >
+                            <MoreVertical size={12} className="text-slate-400" />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          <DropdownMenuItem
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (confirm('האם למחוק את השיעור?')) {
+                                onDeleteLesson(lesson.id);
+                              }
+                            }}
+                            className="text-red-400 cursor-pointer"
+                          >
+                            <Trash2 size={14} className="ml-2" />
+                            מחק שיעור
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </motion.div>
                   ))}
                   {dayLessons.length > (view === 'month' ? 3 : 10) && (
