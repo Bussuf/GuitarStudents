@@ -163,10 +163,8 @@ export default function Lessons() {
     setModalOpen(true);
   };
 
-  const handleDelete = (lesson) => {
-    if (window.confirm(`למחוק את השיעור של ${lesson.student_name}?`)) {
-      deleteMutation.mutate(lesson.id);
-    }
+  const handleDelete = (lessonId) => {
+    deleteMutation.mutate(lessonId);
   };
 
   const columns = [
@@ -201,7 +199,12 @@ export default function Lessons() {
       <NeonButton size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); handleEdit(lesson); }}>
         <Edit2 size={16} />
       </NeonButton>
-      <NeonButton size="sm" variant="danger" onClick={(e) => { e.stopPropagation(); handleDelete(lesson); }}>
+      <NeonButton size="sm" variant="danger" onClick={(e) => { 
+        e.stopPropagation(); 
+        if (confirm(`למחוק את השיעור של ${lesson.student_name}?`)) {
+          handleDelete(lesson.id);
+        }
+      }}>
         <Trash2 size={16} />
       </NeonButton>
     </div>
@@ -271,6 +274,7 @@ export default function Lessons() {
             lessons={lessons}
             onLessonClick={handleEdit}
             onAddLesson={handleAddLesson}
+            onDeleteLesson={handleDelete}
           />
         ) : (
           <DataTable
