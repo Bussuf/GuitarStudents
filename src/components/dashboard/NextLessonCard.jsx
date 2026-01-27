@@ -2,6 +2,7 @@ import React from 'react';
 import { Phone, MessageCircle, Clock, User } from 'lucide-react';
 import NeonButton from '../ui/NeonButton';
 import moment from 'moment';
+import 'moment/locale/he';
 
 export default function NextLessonCard({ lesson, student, settings }) {
   if (!lesson || !student) {
@@ -50,7 +51,7 @@ export default function NextLessonCard({ lesson, student, settings }) {
             <p className="font-bold text-lg">{student.name}</p>
             <div className="flex items-center gap-3 text-sm">
               <p className="text-[#00F0FF]">
-                {moment(lesson.date_time).format('dddd, D/M')} • {moment(lesson.date_time).format('HH:mm')}
+                {moment(lesson.date_time).locale('he').format('dddd, D/M')} • {moment(lesson.date_time).format('HH:mm')}
               </p>
               <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                 student.balance <= 1 

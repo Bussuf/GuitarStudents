@@ -143,7 +143,7 @@ export default function Dashboard() {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pb-6">
-                <LowBalanceCard students={students} />
+                <LowBalanceCard students={students} settings={settings} />
               </AccordionContent>
             </CyberCard>
           </AccordionItem>
@@ -163,7 +163,7 @@ export default function Dashboard() {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-6 pb-6">
-                <TodaySchedule lessons={todayLessons} students={students} />
+                <TodaySchedule lessons={todayLessons} students={students} settings={settings} />
               </AccordionContent>
             </CyberCard>
           </AccordionItem>

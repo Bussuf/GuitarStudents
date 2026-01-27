@@ -1,11 +1,29 @@
 import React from 'react';
-import { AlertTriangle, User } from 'lucide-react';
+import { AlertTriangle, User, MessageCircle } from 'lucide-react';
 import NeonButton from '../ui/NeonButton';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 
-export default function LowBalanceCard({ students }) {
+export default function LowBalanceCard({ students, settings }) {
   const lowBalanceStudents = students.filter(s => s.balance <= 1 && s.is_active !== false);
+
+  const handleWhatsApp = (student) => {
+    const contactPhone = student.contact_parent ? student.parent_phone : student.phone;
+    const contactName = student.contact_parent ? student.parent_name : student.name;
+    
+    let template = student.contact_parent 
+      ? (settings?.whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}')
+      : (settings?.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸');
+    
+    const message = encodeURIComponent(
+      template
+        .replace('{name}', student.name)
+        .replace('{parent}', student.parent_name || contactName)
+        .replace('{time}', '')
+        .replace('{balance}', student.balance || 0)
+    );
+    window.open(`https://wa.me/972${contactPhone?.replace(/^0/, '')}?text=${message}`, '_blank');
+  };
 
   return (
     <div>
@@ -29,11 +47,20 @@ export default function LowBalanceCard({ students }) {
                 <p className="font-medium">{student.name}</p>
                 <p className="text-sm text-yellow-400">יתרה: {student.balance} שיעורים</p>
               </div>
-              <Link to={`${createPageUrl('Finance')}?student=${student.id}`}>
-                <NeonButton variant="secondary" size="sm">
-                  חידוש
+              <div className="flex gap-2">
+                <NeonButton
+                  variant="whatsapp"
+                  size="sm"
+                  onClick={() => handleWhatsApp(student)}
+                >
+                  <MessageCircle size={16} />
                 </NeonButton>
-              </Link>
+                <Link to={`${createPageUrl('Finance')}?student=${student.id}`}>
+                  <NeonButton variant="secondary" size="sm">
+                    חידוש
+                  </NeonButton>
+                </Link>
+              </div>
             </div>
           ))}
         </div>

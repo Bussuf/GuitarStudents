@@ -1,12 +1,37 @@
 import React from 'react';
-import { Calendar, Clock } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import StatusBadge from '../ui/StatusBadge';
+import NeonButton from '../ui/NeonButton';
 import moment from 'moment';
+import 'moment/locale/he';
 
-export default function TodaySchedule({ lessons, students }) {
+export default function TodaySchedule({ lessons, students, settings }) {
   const getStudentName = (studentId) => {
     const student = students.find(s => s.id === studentId);
     return student?.name || 'לא ידוע';
+  };
+
+  const handleWhatsApp = (lesson) => {
+    const student = students.find(s => s.id === lesson.student_id);
+    if (!student) return;
+
+    const contactPhone = student.contact_parent ? student.parent_phone : student.phone;
+    const contactName = student.contact_parent ? student.parent_name : student.name;
+    
+    let template = student.contact_parent 
+      ? (settings?.whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}')
+      : (settings?.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸');
+    
+    const lessonTime = moment(lesson.date_time).format('HH:mm');
+    
+    const message = encodeURIComponent(
+      template
+        .replace('{name}', student.name)
+        .replace('{parent}', student.parent_name || contactName)
+        .replace('{time}', lessonTime)
+        .replace('{balance}', student.balance || 0)
+    );
+    window.open(`https://wa.me/972${contactPhone?.replace(/^0/, '')}?text=${message}`, '_blank');
   };
 
   return (
@@ -29,6 +54,13 @@ export default function TodaySchedule({ lessons, students }) {
                 <p className="font-medium">{lesson.student_name || getStudentName(lesson.student_id)}</p>
               </div>
               <StatusBadge status={lesson.status} />
+              <NeonButton
+                variant="whatsapp"
+                size="sm"
+                onClick={() => handleWhatsApp(lesson)}
+              >
+                <MessageCircle size={16} />
+              </NeonButton>
             </div>
           ))}
         </div>
