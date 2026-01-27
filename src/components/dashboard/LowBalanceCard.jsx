@@ -11,15 +11,12 @@ export default function LowBalanceCard({ students, settings }) {
     const contactPhone = student.contact_parent ? student.parent_phone : student.phone;
     const contactName = student.contact_parent ? student.parent_name : student.name;
     
-    let template = student.contact_parent 
-      ? (settings?.whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}')
-      : (settings?.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸');
+    const template = settings?.whatsapp_renewal_template || 'היי {name}! 🎸 הכרטיסייה שלך עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש אותך!';
     
     const message = encodeURIComponent(
       template
-        .replace('{name}', student.name)
+        .replace('{name}', contactName)
         .replace('{parent}', student.parent_name || contactName)
-        .replace('{time}', '')
         .replace('{balance}', student.balance || 0)
     );
     window.open(`https://wa.me/972${contactPhone?.replace(/^0/, '')}?text=${message}`, '_blank');

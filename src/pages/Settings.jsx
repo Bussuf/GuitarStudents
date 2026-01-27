@@ -32,6 +32,7 @@ export default function Settings() {
     whatsapp_lead_template: '',
     whatsapp_student_template: '',
     whatsapp_parent_template: '',
+    whatsapp_renewal_template: '',
     motd: '',
     notify_before_lesson: false,
     notify_new_lead: false
@@ -51,6 +52,7 @@ export default function Settings() {
         whatsapp_lead_template: settingsData[0].whatsapp_lead_template || 'היי {name}! תודה על הפנייה 🎸',
         whatsapp_student_template: settingsData[0].whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸',
         whatsapp_parent_template: settingsData[0].whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}',
+        whatsapp_renewal_template: settingsData[0].whatsapp_renewal_template || 'היי {name}! 🎸 הכרטיסייה שלך עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש אותך!',
         motd: settingsData[0].motd || '',
         notify_before_lesson: settingsData[0].notify_before_lesson || false,
         notify_new_lead: settingsData[0].notify_new_lead || false
@@ -296,6 +298,21 @@ export default function Settings() {
                           value={formData.whatsapp_parent_template}
                           onChange={handleChange}
                           placeholder="היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-2">
+                          הודעה לחידוש כרטיסיה
+                        </label>
+                        <p className="text-xs text-slate-400 mb-2">תישלח לתלמידים עם יתרה נמוכה (מכרטיסיות לחידוש בדשבורד)</p>
+                        <FormInput
+                          name="whatsapp_renewal_template"
+                          type="textarea"
+                          rows={3}
+                          value={formData.whatsapp_renewal_template}
+                          onChange={handleChange}
+                          placeholder="היי {name}! 🎸 הכרטיסייה שלך עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש אותך!"
                         />
                       </div>
                     </div>
