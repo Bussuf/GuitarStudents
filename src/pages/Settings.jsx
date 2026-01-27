@@ -33,6 +33,7 @@ export default function Settings() {
     whatsapp_student_template: '',
     whatsapp_parent_template: '',
     whatsapp_renewal_template: '',
+    whatsapp_parent_renewal_template: '',
     motd: '',
     notify_before_lesson: false,
     notify_new_lead: false
@@ -53,6 +54,7 @@ export default function Settings() {
         whatsapp_student_template: settingsData[0].whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸',
         whatsapp_parent_template: settingsData[0].whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}',
         whatsapp_renewal_template: settingsData[0].whatsapp_renewal_template || 'היי {name}! 🎸 הכרטיסייה שלך עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש אותך!',
+        whatsapp_parent_renewal_template: settingsData[0].whatsapp_parent_renewal_template || 'היי {parent}! 🎸 הכרטיסייה של {name} עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש!',
         motd: settingsData[0].motd || '',
         notify_before_lesson: settingsData[0].notify_before_lesson || false,
         notify_new_lead: settingsData[0].notify_new_lead || false
@@ -255,6 +257,7 @@ export default function Settings() {
                       </div>
                     </div>
 
+                    {/* הודעות כלליות */}
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -270,52 +273,93 @@ export default function Settings() {
                           placeholder="היי {name}! תודה על הפנייה 🎸"
                         />
                       </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
-                          הודעה לתלמידים (לטלפון התלמיד)
-                        </label>
-                        <p className="text-xs text-slate-400 mb-2">תישלח כשההודעה מועברת ישירות לתלמיד</p>
-                        <FormInput
-                          name="whatsapp_student_template"
-                          type="textarea"
-                          rows={3}
-                          value={formData.whatsapp_student_template}
-                          onChange={handleChange}
-                          placeholder="היי {name}! תזכורת לשיעור שלנו 🎸"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
-                          הודעה להורים
-                        </label>
-                        <p className="text-xs text-slate-400 mb-2">תישלח כשההודעה מועברת להורה של התלמיד (בתלמידים עם "צור קשר עם הורה")</p>
-                        <FormInput
-                          name="whatsapp_parent_template"
-                          type="textarea"
-                          rows={3}
-                          value={formData.whatsapp_parent_template}
-                          onChange={handleChange}
-                          placeholder="היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
-                          הודעה לחידוש כרטיסיה
-                        </label>
-                        <p className="text-xs text-slate-400 mb-2">תישלח לתלמידים עם יתרה נמוכה (מכרטיסיות לחידוש בדשבורד)</p>
-                        <FormInput
-                          name="whatsapp_renewal_template"
-                          type="textarea"
-                          rows={3}
-                          value={formData.whatsapp_renewal_template}
-                          onChange={handleChange}
-                          placeholder="היי {name}! 🎸 הכרטיסייה שלך עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש אותך!"
-                        />
-                      </div>
                     </div>
+
+                    {/* תבניות לתלמידים בוגרים */}
+                    <Accordion type="multiple" className="space-y-3">
+                      <AccordionItem value="student-templates" className="border border-[#334155] rounded-xl overflow-hidden">
+                        <AccordionTrigger className="px-4 py-3 hover:no-underline bg-[#0F172A] hover:bg-[#0F172A]/70">
+                          <div className="flex items-center gap-2">
+                            <span className="text-base font-semibold text-[#00F0FF]">תבניות לתלמידים בוגרים</span>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-4 pb-4 bg-[#0F172A]">
+                          <div className="space-y-4 pt-2">
+                            <div>
+                              <label className="block text-sm font-medium text-slate-300 mb-2">
+                                תזכורת לשיעור
+                              </label>
+                              <p className="text-xs text-slate-400 mb-2">לתלמידים שהטלפון רשום עליהם</p>
+                              <FormInput
+                                name="whatsapp_student_template"
+                                type="textarea"
+                                rows={3}
+                                value={formData.whatsapp_student_template}
+                                onChange={handleChange}
+                                placeholder="היי {name}! תזכורת לשיעור שלנו היום ב{time} 🎸"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-slate-300 mb-2">
+                                חידוש כרטיסיה
+                              </label>
+                              <p className="text-xs text-slate-400 mb-2">לתלמידים עם יתרה נמוכה</p>
+                              <FormInput
+                                name="whatsapp_renewal_template"
+                                type="textarea"
+                                rows={3}
+                                value={formData.whatsapp_renewal_template}
+                                onChange={handleChange}
+                                placeholder="היי {name}! 🎸 הכרטיסייה שלך עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש אותך!"
+                              />
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+
+                      {/* תבניות להורים */}
+                      <AccordionItem value="parent-templates" className="border border-[#334155] rounded-xl overflow-hidden">
+                        <AccordionTrigger className="px-4 py-3 hover:no-underline bg-[#0F172A] hover:bg-[#0F172A]/70">
+                          <div className="flex items-center gap-2">
+                            <span className="text-base font-semibold text-[#BD00FF]">תבניות להורים של תלמידים</span>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-4 pb-4 bg-[#0F172A]">
+                          <div className="space-y-4 pt-2">
+                            <div>
+                              <label className="block text-sm font-medium text-slate-300 mb-2">
+                                תזכורת לשיעור
+                              </label>
+                              <p className="text-xs text-slate-400 mb-2">לתלמידים עם "צור קשר עם הורה"</p>
+                              <FormInput
+                                name="whatsapp_parent_template"
+                                type="textarea"
+                                rows={3}
+                                value={formData.whatsapp_parent_template}
+                                onChange={handleChange}
+                                placeholder="היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-slate-300 mb-2">
+                                חידוש כרטיסיה
+                              </label>
+                              <p className="text-xs text-slate-400 mb-2">לתלמידים עם יתרה נמוכה וצור קשר עם הורה</p>
+                              <FormInput
+                                name="whatsapp_parent_renewal_template"
+                                type="textarea"
+                                rows={3}
+                                value={formData.whatsapp_parent_renewal_template}
+                                onChange={handleChange}
+                                placeholder="היי {parent}! 🎸 הכרטיסייה של {name} עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש!"
+                              />
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
                 </AccordionContent>
               </CyberCard>

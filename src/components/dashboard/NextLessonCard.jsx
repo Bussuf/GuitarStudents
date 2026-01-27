@@ -23,18 +23,18 @@ export default function NextLessonCard({ lesson, student, settings }) {
   };
 
   const handleWhatsApp = () => {
-    let template = student.contact_parent 
+    const template = student.contact_parent 
       ? (settings?.whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}')
-      : (settings?.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸');
+      : (settings?.whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו היום ב{time} 🎸');
     
     const lessonTime = moment(lesson.date_time).format('HH:mm');
     
     const message = encodeURIComponent(
       template
-        .replace('{name}', student.name)
-        .replace('{parent}', student.parent_name || contactName)
-        .replace('{time}', lessonTime)
-        .replace('{balance}', student.balance || 0)
+        .replace(/{name}/g, student.name)
+        .replace(/{parent}/g, contactName)
+        .replace(/{time}/g, lessonTime)
+        .replace(/{balance}/g, student.balance || 0)
     );
     window.open(`https://wa.me/972${contactPhone?.replace(/^0/, '')}?text=${message}`, '_blank');
   };
