@@ -29,14 +29,12 @@ export default function Settings() {
     teacher_name: '',
     default_lesson_price: '',
     price_image_url: '',
-    whatsapp_lead_template: '',
     whatsapp_student_template: '',
     whatsapp_parent_template: '',
     whatsapp_renewal_template: '',
     whatsapp_parent_renewal_template: '',
     motd: '',
-    notify_before_lesson: false,
-    notify_new_lead: false
+    notify_before_lesson: false
   });
 
   const { data: settingsData = [], isLoading } = useQuery({
@@ -50,14 +48,12 @@ export default function Settings() {
         teacher_name: settingsData[0].teacher_name || '',
         default_lesson_price: settingsData[0].default_lesson_price || '',
         price_image_url: settingsData[0].price_image_url || '',
-        whatsapp_lead_template: settingsData[0].whatsapp_lead_template || 'היי {name}! תודה על הפנייה 🎸',
         whatsapp_student_template: settingsData[0].whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸',
         whatsapp_parent_template: settingsData[0].whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}',
         whatsapp_renewal_template: settingsData[0].whatsapp_renewal_template || 'היי {name}! 🎸 הכרטיסייה שלך עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש אותך!',
         whatsapp_parent_renewal_template: settingsData[0].whatsapp_parent_renewal_template || 'היי {parent}! 🎸 הכרטיסייה של {name} עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש!',
         motd: settingsData[0].motd || '',
-        notify_before_lesson: settingsData[0].notify_before_lesson || false,
-        notify_new_lead: settingsData[0].notify_new_lead || false
+        notify_before_lesson: settingsData[0].notify_before_lesson || false
       });
     }
   }, [settingsData]);
@@ -254,24 +250,6 @@ export default function Settings() {
                           <code className="bg-[#1E293B] px-2 py-1 rounded text-[#00F0FF]">{'{balance}'}</code>
                           <span>יתרת שיעורים</span>
                         </div>
-                      </div>
-                    </div>
-
-                    {/* הודעות כלליות */}
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">
-                          הודעה ללידים חדשים
-                        </label>
-                        <p className="text-xs text-slate-400 mb-2">תישלח כשלוחצים על כפתור וואטסאפ בעמוד ניהול הלידים</p>
-                        <FormInput
-                          name="whatsapp_lead_template"
-                          type="textarea"
-                          rows={3}
-                          value={formData.whatsapp_lead_template}
-                          onChange={handleChange}
-                          placeholder="היי {name}! תודה על הפנייה 🎸"
-                        />
                       </div>
                     </div>
 

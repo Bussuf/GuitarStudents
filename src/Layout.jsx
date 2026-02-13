@@ -3,11 +3,9 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { 
   LayoutDashboard, 
-  Users, 
   GraduationCap, 
   Calendar, 
   Wallet, 
-  BookOpen, 
   Settings,
   Menu,
   X,
@@ -16,12 +14,9 @@ import {
 
 const navItems = [
   { name: 'לוח בקרה', icon: LayoutDashboard, page: 'Dashboard' },
-  { name: 'ניהול לידים', icon: Users, page: 'Leads' },
   { name: 'תלמידים', icon: GraduationCap, page: 'Students' },
   { name: 'יומן שיעורים', icon: Calendar, page: 'Lessons' },
   { name: 'כספים וחבילות', icon: Wallet, page: 'Finance' },
-  { name: 'חומרי לימוד', icon: BookOpen, page: 'Resources' },
-  { name: 'מצא טעם מוזיקלי', icon: Guitar, page: 'MusicTaste' },
   { name: 'הגדרות', icon: Settings, page: 'Settings' },
 ];
 
