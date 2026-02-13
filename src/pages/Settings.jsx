@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, Save, User, MessageCircle, Sparkles, Upload, X, Image as ImageIcon } from 'lucide-react';
+import { Settings as SettingsIcon, Save, User, MessageCircle, Sparkles, Upload, X, Image as ImageIcon, Send } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -27,8 +27,10 @@ export default function Settings() {
 
   const [formData, setFormData] = useState({
     teacher_name: '',
+    my_phone: '',
     default_lesson_price: '',
     price_image_url: '',
+    flyer_images: [],
     whatsapp_student_template: '',
     whatsapp_parent_template: '',
     whatsapp_renewal_template: '',
@@ -46,8 +48,10 @@ export default function Settings() {
     if (settingsData[0]) {
       setFormData({
         teacher_name: settingsData[0].teacher_name || '',
+        my_phone: settingsData[0].my_phone || '',
         default_lesson_price: settingsData[0].default_lesson_price || '',
         price_image_url: settingsData[0].price_image_url || '',
+        flyer_images: settingsData[0].flyer_images || [],
         whatsapp_student_template: settingsData[0].whatsapp_student_template || 'היי {name}! תזכורת לשיעור שלנו 🎸',
         whatsapp_parent_template: settingsData[0].whatsapp_parent_template || 'היי {parent}, היום ב{time} שיעור ל{name}. 🎵 יתרת שיעורים: {balance}',
         whatsapp_renewal_template: settingsData[0].whatsapp_renewal_template || 'היי {name}! 🎸 הכרטיסייה שלך עומדת להסתיים (נותרו {balance} שיעורים). נשמח לחדש אותך!',
@@ -91,6 +95,39 @@ export default function Settings() {
     } finally {
       setUploadingImage(false);
     }
+  };
+
+  const handleFlyerUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setUploadingImage(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setFormData(prev => ({ 
+        ...prev, 
+        flyer_images: [...(prev.flyer_images || []), file_url] 
+      }));
+    } catch (error) {
+      alert('שגיאה בהעלאת התמונה');
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  const removeFlyerImage = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      flyer_images: prev.flyer_images.filter((_, i) => i !== index)
+    }));
+  };
+
+  const sendFlyerToWhatsApp = (imageUrl) => {
+    if (!formData.my_phone) {
+      alert('נא להזין מספר טלפון בפרטים אישיים');
+      return;
+    }
+    window.open(`https://wa.me/972${formData.my_phone.replace(/^0/, '')}?text=${encodeURIComponent(imageUrl)}`, '_blank');
   };
 
   const handleSubmit = (e) => {
@@ -145,6 +182,13 @@ export default function Settings() {
                       value={formData.teacher_name}
                       onChange={handleChange}
                       placeholder="הכנס את שמך"
+                    />
+                    <FormInput
+                      label="מספר טלפון שלי"
+                      name="my_phone"
+                      value={formData.my_phone}
+                      onChange={handleChange}
+                      placeholder="0501234567"
                     />
                     <FormInput
                       label="מחיר שיעור רגיל (₪)"
@@ -213,6 +257,78 @@ export default function Settings() {
                         />
                       </label>
                     )}
+                  </div>
+                </AccordionContent>
+              </CyberCard>
+            </AccordionItem>
+          </motion.div>
+
+          {/* Flyer Images */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+            <AccordionItem value="flyer-images" className="border-0">
+              <CyberCard>
+                <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <Sparkles className="w-5 h-5 text-[#BD00FF]" />
+                    <h2 className="text-xl font-bold">תמונות פלייר</h2>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-6">
+                  <div className="pt-2 space-y-4">
+                    <p className="text-sm text-slate-400">העלה תמונות פלייר לשיתוף מהיר</p>
+                    
+                    {formData.flyer_images && formData.flyer_images.length > 0 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {formData.flyer_images.map((url, index) => (
+                          <div key={index} className="relative group">
+                            <img 
+                              src={url} 
+                              alt={`פלייר ${index + 1}`} 
+                              className="w-full rounded-xl border border-[#334155]"
+                            />
+                            <div className="absolute top-2 right-2 flex gap-2">
+                              <button
+                                type="button"
+                                onClick={() => sendFlyerToWhatsApp(url)}
+                                className="p-2 bg-[#25D366] hover:bg-[#20BD5A] rounded-lg transition-colors"
+                              >
+                                <Send size={16} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => removeFlyerImage(index)}
+                                className="p-2 bg-red-500/80 hover:bg-red-500 rounded-lg transition-colors"
+                              >
+                                <X size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <label className="block">
+                      <div className="border-2 border-dashed border-[#334155] rounded-xl p-8 text-center cursor-pointer hover:border-[#BD00FF] transition-colors">
+                        {uploadingImage ? (
+                          <div className="flex flex-col items-center gap-3">
+                            <div className="w-8 h-8 border-4 border-[#BD00FF] border-t-transparent rounded-full animate-spin" />
+                            <span className="text-slate-400">מעלה תמונה...</span>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center gap-3">
+                            <Upload className="w-8 h-8 text-slate-400" />
+                            <span className="text-slate-400">לחץ להוספת תמונת פלייר</span>
+                          </div>
+                        )}
+                      </div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFlyerUpload}
+                        className="hidden"
+                        disabled={uploadingImage}
+                      />
+                    </label>
                   </div>
                 </AccordionContent>
               </CyberCard>
