@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, Save, User, DollarSign, MessageCircle, Sparkles, Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
+import { Settings as SettingsIcon, Save, User, MessageCircle, Sparkles, Upload, X, Image as ImageIcon } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -393,19 +393,6 @@ export default function Settings() {
                       />
                       <label htmlFor="notify-lesson" className="text-slate-300 cursor-pointer flex-1">
                         שלח התראה 15 דקות לפני שיעור
-                      </label>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 p-3 bg-[#0F172A] rounded-xl">
-                      <input
-                        type="checkbox"
-                        id="notify-lead"
-                        checked={formData.notify_new_lead || false}
-                        onChange={(e) => setFormData(prev => ({ ...prev, notify_new_lead: e.target.checked }))}
-                        className="w-5 h-5 rounded accent-[#00F0FF]"
-                      />
-                      <label htmlFor="notify-lead" className="text-slate-300 cursor-pointer flex-1">
-                        שלח התראה על ליד חדש
                       </label>
                     </div>
                   </div>
