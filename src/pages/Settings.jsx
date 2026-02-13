@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, Save, User, MessageCircle, Sparkles, Upload, X, Image as ImageIcon, Send } from 'lucide-react';
+import { Settings as SettingsIcon, Save, User, MessageCircle, Sparkles, Upload, X, Image as ImageIcon, Send, Copy } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -122,12 +122,17 @@ export default function Settings() {
     }));
   };
 
-  const sendFlyerToWhatsApp = (imageUrl) => {
+  const sendImageToWhatsApp = (imageUrl) => {
     if (!formData.my_phone) {
       alert('נא להזין מספר טלפון בפרטים אישיים');
       return;
     }
     window.open(`https://wa.me/972${formData.my_phone.replace(/^0/, '')}?text=${encodeURIComponent(imageUrl)}`, '_blank');
+  };
+
+  const copyImageUrl = (imageUrl) => {
+    navigator.clipboard.writeText(imageUrl);
+    alert('הקישור הועתק ללוח');
   };
 
   const handleSubmit = (e) => {
@@ -219,19 +224,35 @@ export default function Settings() {
                     <p className="text-sm text-slate-400">העלה תמונה של כרטיסיית המחירים - תישלח ללידים חדשים</p>
                     
                     {formData.price_image_url ? (
-                      <div className="relative inline-block">
+                      <div className="relative inline-block group">
                         <img 
                           src={formData.price_image_url} 
                           alt="מחירון" 
                           className="max-w-xs rounded-xl border border-[#334155]"
                         />
-                        <button
-                          type="button"
-                          onClick={() => setFormData(prev => ({ ...prev, price_image_url: '' }))}
-                          className="absolute top-2 right-2 p-2 bg-red-500/80 hover:bg-red-500 rounded-lg transition-colors"
-                        >
-                          <X size={16} />
-                        </button>
+                        <div className="absolute top-2 right-2 flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => sendImageToWhatsApp(formData.price_image_url)}
+                            className="p-2 bg-[#25D366] hover:bg-[#20BD5A] rounded-lg transition-colors"
+                          >
+                            <Send size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => copyImageUrl(formData.price_image_url)}
+                            className="p-2 bg-blue-500/80 hover:bg-blue-500 rounded-lg transition-colors"
+                          >
+                            <Copy size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setFormData(prev => ({ ...prev, price_image_url: '' }))}
+                            className="p-2 bg-red-500/80 hover:bg-red-500 rounded-lg transition-colors"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
                       </div>
                     ) : (
                       <label className="block">
@@ -289,10 +310,17 @@ export default function Settings() {
                             <div className="absolute top-2 right-2 flex gap-2">
                               <button
                                 type="button"
-                                onClick={() => sendFlyerToWhatsApp(url)}
+                                onClick={() => sendImageToWhatsApp(url)}
                                 className="p-2 bg-[#25D366] hover:bg-[#20BD5A] rounded-lg transition-colors"
                               >
                                 <Send size={16} />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => copyImageUrl(url)}
+                                className="p-2 bg-blue-500/80 hover:bg-blue-500 rounded-lg transition-colors"
+                              >
+                                <Copy size={16} />
                               </button>
                               <button
                                 type="button"
