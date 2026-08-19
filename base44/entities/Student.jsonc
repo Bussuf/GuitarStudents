@@ -1,0 +1,69 @@
+{
+  "name": "Student",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05ea\u05dc\u05de\u05d9\u05d3"
+    },
+    "phone": {
+      "type": "string",
+      "description": "\u05d8\u05dc\u05e4\u05d5\u05df \u05ea\u05dc\u05de\u05d9\u05d3"
+    },
+    "city": {
+      "type": "string",
+      "description": "\u05d9\u05d9\u05e9\u05d5\u05d1 \u05de\u05d2\u05d5\u05e8\u05d9\u05dd"
+    },
+    "age": {
+      "type": "number",
+      "description": "\u05d2\u05d9\u05dc"
+    },
+    "balance": {
+      "type": "number",
+      "default": 0,
+      "description": "\u05d9\u05ea\u05e8\u05ea \u05e9\u05d9\u05e2\u05d5\u05e8\u05d9\u05dd"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u05ea\u05dc\u05de\u05d9\u05d3 \u05e4\u05e2\u05d9\u05dc?"
+    },
+    "contact_parent": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u05e6\u05d5\u05e8 \u05e7\u05e9\u05e8 \u05e2\u05dd \u05d4\u05d5\u05e8\u05d4?"
+    },
+    "parent_name": {
+      "type": "string",
+      "description": "\u05e9\u05dd \u05d4\u05d5\u05e8\u05d4"
+    },
+    "parent_phone": {
+      "type": "string",
+      "description": "\u05d8\u05dc\u05e4\u05d5\u05df \u05d4\u05d5\u05e8\u05d4"
+    },
+    "photo_url": {
+      "type": "string",
+      "description": "\u05ea\u05de\u05d5\u05e0\u05ea \u05e4\u05e8\u05d5\u05e4\u05d9\u05dc"
+    },
+    "recurring_schedule": {
+      "type": "array",
+      "description": "\u05d9\u05de\u05d9\u05dd \u05d5\u05e9\u05e2\u05d5\u05ea \u05e7\u05d1\u05d5\u05e2\u05d9\u05dd",
+      "items": {
+        "type": "object",
+        "properties": {
+          "day": {
+            "type": "number",
+            "description": "\u05d9\u05d5\u05dd \u05d1\u05e9\u05d1\u05d5\u05e2 (0=\u05e8\u05d0\u05e9\u05d5\u05df, 6=\u05e9\u05d1\u05ea)"
+          },
+          "time": {
+            "type": "string",
+            "description": "\u05e9\u05e2\u05d4 (HH:mm)"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
